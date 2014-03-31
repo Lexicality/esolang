@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en-gb">
+<head>
+	<meta charset="utf-8">
+	<title>Brainfuck</title>
+	<link rel="stylesheet" type="text/css" href="brainfuck.css">
+<body>
+	<div id="content">
+		<h2>Program</h2>
+		<p id="program" class="srccode">&nbsp;</p>
+		<h2>STDOut</h2>
+		<p id="stdout" class="srccode">&nbsp;</p>
+		<h2>STDIn</h2>
+		<textarea id="stdin" rows="3"></textarea>
+	</div>
+	<div id="controls">
+		<h2>Stack</h2>
+		<table id="stack" border="1">
+			<thead><tr>
+				<th>#</th><th>Value</th>
+			</tr></thead>
+			<tbody></tbody>
+		</table>
+		<h2>Execution Speed</h2>
+		<div id="exec-speed-container">
+			<input id="exec-speed" type="number" value="1000" min="0">
+			<span>ms</span>
+		</div>
+		<h2>Program Input</h2>
+		<textarea id="program-input" rows="5"></textarea>
+		<button id="program-compile">Compile</button>
+
+	</div>
+	<script src="brainfuck.js"></script>
+</body>
+</html>

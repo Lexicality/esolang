@@ -1,0 +1,53 @@
+body {
+	display: flex;
+}
+#content, #controls {
+	padding: 5px;
+	flex: 1;
+}
+#content {
+	flex: 4;
+}
+/*#controls {
+	flex: 0.4;
+}*/
+
+h2, p {
+	margin: 0;
+	padding: 0;
+}
+
+h1,h2,h3,h4,h4 {
+	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+
+textarea, table, button {
+	width: 100%;
+	box-sizing: border-box;
+}
+
+.srccode {
+	white-space: pre;
+	width: 100%;
+	min-height: 100px;
+	background: rgb(230,230,230);
+	font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+}
+
+#exec-speed-container {
+	display: flex;
+}
+#exec-speed-container > span {
+	flex: 0;
+	margin-left: 2px;
+}
+#exec-speed {
+	flex: 1;
+}
+
+#program {
+}
+
+#stdout {
+
+}
