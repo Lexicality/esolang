@@ -1,6 +1,14 @@
 (function(global) {
     'use strict';
 
+    function $(selector) {
+        return document.querySelector(selector);
+    }
+
+    function $$(selector) {
+        return document.querySelectorAll(selector);
+    }
+
     (function(id) {
         var i, j;
         var tab = document.getElementById(id);
@@ -20,5 +28,12 @@
         }
     })('rams');
 
+    $('#program-compile').addEventListener('click', function() {
+        var tarea = $('#program-input');
+        var programSrc = tarea.value;
+        tarea.value = '';
+        var program = $('#program')
+        program.textContent = programSrc;
+    })
 
 })(this)
