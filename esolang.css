@@ -3,10 +3,11 @@ body,
 	display: flex;
 }
 #content, #controls {
-	padding: 5px;
+	/*padding: 5px;*/
 	flex: 1;
 }
 #content {
+	margin-right: 10px;
 	flex: 4;
 }
 
@@ -29,7 +30,7 @@ textarea, table, button {
 }
 
 .srccode {
-	white-space: pre;
+	white-space: pre-wrap;
 	width: 100%;
 	min-height: 100px;
 	background: rgb(230,230,230);
