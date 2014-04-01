@@ -18,12 +18,14 @@
         // thead.appendChild(tr);
         for (i = 0; i < 3; i++) {
             tr = document.createElement('tr');
+            tr.id = "row-" + i;
             // th = document.createElement('th');
             // th.textContent = i + 1;
             // tr.appendChild(th);
             for (j = 0; j < 30; j++) {
                 td = document.createElement('td');
                 td.textContent = 0;
+                td.id = "cell-" + (i * 30 + j);
                 tr.appendChild(td);
             }
             tbody.appendChild(tr);
