@@ -2,7 +2,7 @@
 <html lang="en-gb">
 <head>
 	<meta charset="utf-8">
-	<title>Brainfuck</title>
+	<title>Befunge</title>
 	<link rel="stylesheet" type="text/css" href="esolang.css">
 <body>
 	<div id="content">
@@ -14,6 +14,16 @@
 		<textarea id="stdin" rows="3"></textarea>
 	</div>
 	<div id="controls">
+		<h2>Controls</h2>
+		<div id="program-controls">
+			<button id="program-pause">Pause</button>
+			<button id="program-restart">Restart</button>
+		</div>
+		<h2>Execution Speed</h2>
+		<div id="exec-speed-container">
+			<input id="exec-speed" type="number" value="1000" min="0">
+			<span>ms</span>
+		</div>
 		<h2>Stack</h2>
 		<table id="stack" border="1">
 			<thead><tr>
@@ -21,11 +31,6 @@
 			</tr></thead>
 			<tbody></tbody>
 		</table>
-		<h2>Execution Speed</h2>
-		<div id="exec-speed-container">
-			<input id="exec-speed" type="number" value="1000" min="0">
-			<span>ms</span>
-		</div>
 		<h2>Program Input</h2>
 		<textarea id="program-input" rows="5"></textarea>
 		<button id="program-compile">Compile</button>
