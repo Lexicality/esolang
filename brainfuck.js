@@ -12,6 +12,10 @@
     function $$(selector) {
         return document.querySelectorAll(selector);
     }
+
+    function stdout(msg) {
+        $('#stdout').textContent += msg;
+    }
     var timeOutNum = 1000,
         timeOutValue = 0,
         running = true;
