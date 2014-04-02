@@ -12,15 +12,17 @@
     function $$(selector) {
         return document.querySelectorAll(selector);
     }
-    var timeOutNum = 1000;
+    var timeOutNum = 1000,
+        timeOutValue = 0;
 
     function runProgram() {
+        window.clearTimeout(timeOutValue);
         if (true)
             return;
 
         // foo
 
-        window.setTimeout(runProgram, timeOutNum);
+        timeOutValue = window.setTimeout(runProgram, timeOutNum);
     }
 
 
@@ -53,6 +55,9 @@
 
     $('#exec-speed').on('change', function() {
         timeOutNum = this.value;
+    });
+    $('#program-step').on('click', function() {
+        runProgram();
     });
 
 })(this);
