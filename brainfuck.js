@@ -47,7 +47,7 @@
         var tarea = $('#program-input');
         var programSrc = tarea.value;
         tarea.value = '';
-        var program = $('#program')
+        var program = $('#program');
         program.textContent = programSrc;
     });
 
@@ -55,4 +55,4 @@
         timeOutNum = this.value;
     });
 
-})(this)
+})(this);
