@@ -13,7 +13,8 @@
         return document.querySelectorAll(selector);
     }
     var timeOutNum = 1000,
-        timeOutValue = 0;
+        timeOutValue = 0,
+        running = true;
 
     function runProgram() {
         window.clearTimeout(timeOutValue);
@@ -22,7 +23,8 @@
 
         // foo
 
-        timeOutValue = window.setTimeout(runProgram, timeOutNum);
+        if (running)
+            timeOutValue = window.setTimeout(runProgram, timeOutNum);
     }
 
 
@@ -58,6 +60,14 @@
     });
     $('#program-step').on('click', function() {
         runProgram();
+    });
+    $('#program-pause').on('click', function() {
+        running = !running;
+        if (!running) {
+            window.clearTimeout(timeOutValue);
+        } else {
+            runProgram();
+        }
     });
 
 })(this);
