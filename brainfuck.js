@@ -12,6 +12,17 @@
     function $$(selector) {
         return document.querySelectorAll(selector);
     }
+    var timeOutNum = 1000;
+
+    function runProgram() {
+        if (true)
+            return;
+
+        // foo
+
+        window.setTimeout(runProgram, timeOutNum);
+    }
+
 
     (function(id) {
         var i, j;
@@ -38,6 +49,10 @@
         tarea.value = '';
         var program = $('#program')
         program.textContent = programSrc;
+    });
+
+    $('#exec-speed').on('change', function() {
+        timeOutNum = this.value;
     });
 
 })(this)
