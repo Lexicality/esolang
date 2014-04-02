@@ -1,6 +1,10 @@
 (function(global) {
     'use strict';
 
+    HTMLElement.prototype.on = function() {
+        this.addEventListener.apply(this, arguments);
+    };
+
     function $(selector) {
         return document.querySelector(selector);
     }
@@ -28,12 +32,12 @@
         }
     })('rams');
 
-    $('#program-compile').addEventListener('click', function() {
+    $('#program-compile').on('click', function() {
         var tarea = $('#program-input');
         var programSrc = tarea.value;
         tarea.value = '';
         var program = $('#program')
         program.textContent = programSrc;
-    })
+    });
 
 })(this)
