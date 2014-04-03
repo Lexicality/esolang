@@ -22,7 +22,7 @@
 
     var ram = [],
         ramPointer = 0,
-        ramStack = new HighlighterStack();
+        ramStack = new global.HighlightStack();
 
     function updatePointer(num) {
         ramPointer = num;
