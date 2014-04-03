@@ -1,11 +1,17 @@
-@colour: rgb(100, 149, 237);
+@colour: blue;//rgb(100, 149, 237);
+
+.colour(@a) when(@a = 0) {
+	color: white;
+}
+.colour(@a){}
 
 .trail(@step) when(@step >= 0) {
 	.trail-step-@{step} {
-		background-color: lighten(@colour, @step * 2);
+		.colour(@step);
+		background-color: lighten(@colour, @step * 10);
 	}
 	.trail(@step - 1);
 }
 .trail(-1) {}
 
-.trail(9);
+.trail(4);
