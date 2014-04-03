@@ -47,7 +47,41 @@
         if (running)
             timeOutValue = window.setTimeout(runProgram, timeOutNum);
     }
+    var isComment = /[^<>+-\[\].,]/;
 
+    function tokenizeProgram(text) {
+        var prog = [],
+            loopStack = [],
+            currentComment = '';
+        var tokens = text.split('').forEach(function(token) {
+            if (isComment.test(token)) {
+                currentComment += token;
+                return;
+            }
+            if (currentComment) {
+                prog.push(['comment', currentComment]);
+                currentComment = '';
+                pc++;
+            }
+            if (token == '[') {
+                loopStack.push(prog.length);
+                prog.push(['opcode', token, -1]);
+            } else if (token == ']') {
+                if (!loopStack.length)
+                    throw new Error("Unbalanced []s!");
+                var match = loopStack.pop();
+                prog[match][2] = prog.length;
+                prog.push(['opcode', token, match]);
+            } else {
+                prog.push(['opcode', token]);
+            }
+        });
+        if (loopStack.length > 0)
+            throw new Error("Unbalanced []s!");
+        return prog;
+    }
+    // debug
+    global.tokenizeProgram = tokenizeProgram;
 
     (function(id) {
         var i, j;
