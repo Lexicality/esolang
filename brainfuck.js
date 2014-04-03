@@ -20,6 +20,23 @@
         timeOutValue = 0,
         running = true;
 
+    var ram = [],
+        ramPointer = 0,
+        ramStack = new HighlighterStack();
+
+    function updatePointer(num) {
+        ramPointer = num;
+        ramStack.addItem($('#cell-' + num));
+    }
+
+    function getRam() {
+        return ram[ramPointer] || 0;
+    }
+
+    function setRam(value) {
+        ram[ramPointer] = value;
+    }
+
     function runProgram() {
         window.clearTimeout(timeOutValue);
         if (true)
