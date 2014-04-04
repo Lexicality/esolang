@@ -24,7 +24,7 @@
     }
     var timeOutNum = 1000,
         timeOutValue = 0,
-        running = true;
+        running = false;
 
     var ram = [],
         maxRams = 90, // FIXME We probably need more than 90. Say a 30k-ish?
@@ -85,6 +85,18 @@
     function resetProgram() {
         pc = 0;
         resetRam();
+    }
+
+    function haltProgram() {
+        running = false;
+        $('#program-pause').innerText = 'Resume';
+        window.clearTimeout(timeOutValue);
+    }
+
+    function resumeProgram() {
+        running = true;
+        $('#program-pause').innerText = 'Pause';
+        runProgram();
     }
 
     function runProgram() {
@@ -178,12 +190,10 @@
         runProgram();
     });
     $('#program-pause').on('click', function() {
-        running = !running;
-        if (!running) {
-            window.clearTimeout(timeOutValue);
-        } else {
-            runProgram();
-        }
+        if (running)
+            haltProgram();
+        else
+            resumeProgram();
     });
     $('#program-restart').on('click', function() {
         resetProgram();
