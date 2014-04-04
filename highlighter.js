@@ -67,9 +67,17 @@
         this.items.unshift(item);
         this.items.forEach(setStageByIndex);
     };
+
+    function nukeItem(item) {
+        item.deactivate();
+    }
+    HighlightStack.prototype.clearStack = function() {
+        this.items.forEach(nukeItem);
+        this.items = [];
+        this.lookup = {};
+    };
+
     global.HighlightStack = HighlightStack;
-
-
     global.testStack = function(el) {
         var stack = new HighlightStack();
         for (var i = 0; i < maxStack + 1; i++) {
