@@ -22,6 +22,20 @@
     function stdout(msg) {
         $('#stdout').textContent += msg;
     }
+
+    function stdin() {
+        var el = $('#stdin');
+        var value = el.value;
+        if (!value.length) {
+            return '';
+        } else if (1 == value.length) {
+            el.value = '';
+            return value;
+        }
+        var ret = value.substr(0, 1);
+        el.value = value.substr(1);
+        return ret;
+    }
     var timeOutNum = 1000,
         timeOutValue = 0,
         running = false;
@@ -138,7 +152,23 @@
         } else if (cmd == '>') {
             incrementPointer();
         } else if (cmd == ',') {
-
+            value = stdin();
+            if ('' !== value) {
+                // value = String.toCharCode(value); // FIXME: This isn't the right function name
+                value = 65;
+                // Sorry Unicode!
+                if (value > 255)
+                    value = 255;
+                if (value < 0)
+                    value = 0;
+                setRam(value);
+            } else {
+                // UH-OH, the user hasn't entered anything into stdin.
+                // Wait until they do.
+                // TODO: Maybe some kind of notification?
+                didMemOperation = false;
+                pc--;
+            }
         } else if (cmd == '.') {
             stdout(String.fromCharCode(value));
         } else if (cmd == '[') {
