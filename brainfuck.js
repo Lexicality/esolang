@@ -154,8 +154,7 @@
         } else if (cmd == ',') {
             value = stdin();
             if ('' !== value) {
-                // value = String.toCharCode(value); // FIXME: This isn't the right function name
-                value = 65;
+                value = value.charCodeAt(0);
                 // Sorry Unicode!
                 if (value > 255)
                     value = 255;
