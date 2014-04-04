@@ -25,6 +25,10 @@
         ramPointer = 0,
         ramStack = new global.HighlightStack();
 
+    function touchCell(cell) { // cell is optional
+        ramStack.promote(cell || $('#cell-' + ramPointer));
+    }
+
     function updatePointer(num) {
         var cell;
         // TODO: Validate num
@@ -35,7 +39,7 @@
         cell = $('#cell-' + num);
         if (cell) {
             cell.classList.add('active-cell');
-            ramStack.promote(cell);
+            touchCell(cell);
         }
     }
 
@@ -59,6 +63,7 @@
 
     function setRam(value) {
         ram[ramPointer] = value;
+        touchCell();
     }
 
     function resetRam() {
