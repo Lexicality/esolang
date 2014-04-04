@@ -31,8 +31,8 @@
         ramPointer = 0,
         ramStack = new global.HighlightStack();
 
-    function touchCell(cell) { // cell is optional
-        ramStack.promote(cell || $('#cell-' + ramPointer));
+    function touchCell(cell) {
+        ramStack.promote(cell);
     }
 
     function updatePointer(num) {
@@ -69,7 +69,11 @@
 
     function setRam(value) {
         ram[ramPointer] = value;
-        touchCell();
+        var cell = $('#cell-' + ramPointer);
+        if (cell) {
+            cell.textContent = value;
+            touchCell(cell);
+        }
     }
 
     function resetRam() {
