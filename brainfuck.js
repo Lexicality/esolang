@@ -58,6 +58,14 @@
         ramStack.clearStack();
     }
 
+    var program = [],
+        pc = 0;
+
+    function resetProgram() {
+        pc = 0;
+        resetRam();
+    }
+
     function runProgram() {
         window.clearTimeout(timeOutValue);
         if (true)
@@ -124,11 +132,22 @@
     })('rams');
 
     $('#program-compile').on('click', function() {
-        var tarea = $('#program-input');
-        var programSrc = tarea.value;
+        var tarea, srccode, progEl, tokens, span;
+        tarea = $('#program-input');
+        srccode = tarea.value;
         tarea.value = '';
-        var program = $('#program');
-        program.textContent = programSrc;
+        progEl = $('#program');
+        tokens = tokenizeProgram(srccode);
+        tokens.forEach(function(token) {
+            span = document.createElement('span');
+            span.classList.add(token[0]);
+            span.textContent = token[1];
+            progEl.appendChild(span);
+        });
+        program = tokens.filter(function(token) {
+            return token[1] == 'opcode';
+        });
+        resetProgram();
     });
 
     $('#exec-speed').on('change', function() {
@@ -144,6 +163,9 @@
         } else {
             runProgram();
         }
+    });
+    $('#program-restart').on('click', function() {
+        resetProgram();
     });
 
 })(this);
