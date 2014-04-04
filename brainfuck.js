@@ -21,6 +21,7 @@
         running = true;
 
     var ram = [],
+        maxRams = 90,
         ramPointer = 0,
         ramStack = new global.HighlightStack();
 
@@ -29,12 +30,32 @@
         ramStack.addItem($('#cell-' + num));
     }
 
+    function incrementPointer() {
+        var ptr = ramPointer + 1;
+        if (ptr >= maxRams)
+            ptr = 0;
+        updatePointer(ptr);
+    }
+
+    function decrementPointer() {
+        var ptr = ramPointer - 1;
+        if (ptr < 0)
+            ptr = maxRams - 1;
+        updatePointer(ptr);
+    }
+
     function getRam() {
         return ram[ramPointer] || 0;
     }
 
     function setRam(value) {
         ram[ramPointer] = value;
+    }
+
+    function resetRam() {
+        ramPointer = 0;
+        ram = [];
+        ramStack.clearStack();
     }
 
     function runProgram() {
