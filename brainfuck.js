@@ -80,10 +80,12 @@
     resetRam();
 
     var program = [],
+        programStack = new HighlightStack(),
         pc = 0;
 
     function resetProgram() {
         pc = 0;
+        programStack.clear();
         resetRam();
     }
 
@@ -99,13 +101,49 @@
         runProgram();
     }
 
+    function checkForProgramEnd() {
+        if (!program[pc]) {
+            haltProgram();
+            return true;
+        }
+        return false;
+    }
+
     function runProgram() {
         window.clearTimeout(timeOutValue);
-        if (true)
+        if (checkForProgramEnd())
             return;
+        var token = program[pc],
+            cmd = token[1];
+        programStack.promote(token[4]);
+        var didMemOperation = !(cmd == '[' || cmd == ']');
+        var value = getRam();
 
-        // foo
+        if (cmd == '+') {
 
+        } else if (cmd == '-') {
+
+        } else if (cmd == '<') {
+
+        } else if (cmd == '>') {
+
+        } else if (cmd == ',') {
+
+        } else if (cmd == '.') {
+
+        } else if (cmd == '[') {
+
+        } else if (cmd == ']') {
+
+        } else {
+            throw new Error("Unkown opcode '" + cmd + "'!");
+        }
+
+        pc++;
+        if (checkForProgramEnd())
+            return;
+        if (!didMemOperation)
+            ramStack.decay();
         if (running)
             timeOutValue = window.setTimeout(runProgram, timeOutNum);
     }
@@ -175,6 +213,7 @@
                     span.classList.add(token[0] + '-' + tokenClass);
             }
             span.textContent = token[1];
+            token[4] = span;
             progEl.appendChild(span);
         });
         program = tokens.filter(function(token) {
