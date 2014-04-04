@@ -4,6 +4,12 @@
     HTMLElement.prototype.on = function() {
         this.addEventListener.apply(this, arguments);
     };
+    HTMLElement.prototype.empty = function() {
+        while (this.firstChild) {
+            // FIXME: Does this .remove() on the child? We don't want orphan nodes
+            this.removeChild(this.firstChild);
+        }
+    };
 
     function $(selector) {
         return document.querySelector(selector);
@@ -143,9 +149,10 @@
     $('#program-compile').on('click', function() {
         var tarea, srccode, progEl, tokens, span;
         tarea = $('#program-input');
-        srccode = tarea.value;
+        srccode = tarea.value.trim();
         tarea.value = '';
         progEl = $('#program');
+        progEl.empty();
         tokens = tokenizeProgram(srccode);
         tokens.forEach(function(token) {
             span = document.createElement('span');
@@ -159,7 +166,7 @@
             progEl.appendChild(span);
         });
         program = tokens.filter(function(token) {
-            return token[1] == 'opcode';
+            return token[0] == 'opcode';
         });
         resetProgram();
     });
