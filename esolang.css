@@ -31,6 +31,11 @@ textarea, table, button {
 	box-sizing: border-box;
 }
 
+.active-cell {
+	/*text-decoration: underline;*/
+	border: 1px dashed red;
+}
+
 .srccode {
 	white-space: pre-wrap;
 	width: 100%;

@@ -21,13 +21,22 @@
         running = true;
 
     var ram = [],
-        maxRams = 90,
+        maxRams = 90, // FIXME We probably need more than 90. Say a 30k-ish?
         ramPointer = 0,
         ramStack = new global.HighlightStack();
 
     function updatePointer(num) {
+        var cell;
+        // TODO: Validate num
+        cell = $('#cell-' + ramPointer);
+        if (cell)
+            cell.classList.remove('active-cell');
         ramPointer = num;
-        ramStack.promote($('#cell-' + num));
+        cell = $('#cell-' + num);
+        if (cell) {
+            cell.classList.add('active-cell');
+            ramStack.promote(cell);
+        }
     }
 
     function incrementPointer() {
@@ -53,10 +62,11 @@
     }
 
     function resetRam() {
-        ramPointer = 0;
         ram = [];
+        updatePointer(0);
         ramStack.clear();
     }
+    resetRam();
 
     var program = [],
         pc = 0;
