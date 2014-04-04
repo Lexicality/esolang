@@ -90,7 +90,6 @@
             if (currentComment) {
                 prog.push(['comment', currentComment]);
                 currentComment = '';
-                pc++;
             }
             if (token == '[') {
                 loopStack.push(prog.length);
@@ -105,6 +104,9 @@
                 prog.push(['opcode', token]);
             }
         });
+        if (currentComment) {
+            prog.push(['comment', currentComment]);
+        }
         if (loopStack.length > 0)
             throw new Error("Unbalanced []s!");
         return prog;
