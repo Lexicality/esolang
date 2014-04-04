@@ -46,32 +46,37 @@
     function step(item) {
         item.step();
     }
-    HighlightStack.prototype.addItem = function(el) {
+    HighlightStack.prototype.decay = function() {
+        this.items.forEach(step);
+    };
+
+    HighlightStack.prototype.promote = function(el) {
+        if (!el)
+            return;
+        else if (!(el instanceof HTMLElement))
+            throw new Error("Invalid argument");
+        this.decay();
         var guid = getGuid(el);
         var item = this.lookup[guid];
         if (item)
-            return this.promoteItem(item);
+            return this._existingItem(item);
         item = new StackItem(el);
         this.lookup[guid] = item;
-        this.items.forEach(step);
         this.items.unshift(item);
         if (this.items.length > maxStack)
             delete this.lookup[this.items.pop().el];
     };
 
-    function setStageByIndex(item, i) {
-        item.setStage(i);
-    }
-    HighlightStack.prototype.promoteItem = function(item) {
+    HighlightStack.prototype._existingItem = function(item) {
         this.items.splice(this.items.indexOf(item), 1);
         this.items.unshift(item);
-        this.items.forEach(setStageByIndex);
+        item.setStage(0);
     };
 
     function nukeItem(item) {
         item.deactivate();
     }
-    HighlightStack.prototype.clearStack = function() {
+    HighlightStack.prototype.clear = function() {
         this.items.forEach(nukeItem);
         this.items = [];
         this.lookup = {};
@@ -81,7 +86,7 @@
     global.testStack = function(el) {
         var stack = new HighlightStack();
         for (var i = 0; i < maxStack + 1; i++) {
-            stack.addItem(el);
+            stack.promote(el);
             el = el.nextSibling;
         }
         return stack;

@@ -27,7 +27,7 @@
 
     function updatePointer(num) {
         ramPointer = num;
-        ramStack.addItem($('#cell-' + num));
+        ramStack.promote($('#cell-' + num));
     }
 
     function incrementPointer() {
@@ -55,7 +55,7 @@
     function resetRam() {
         ramPointer = 0;
         ram = [];
-        ramStack.clearStack();
+        ramStack.clear();
     }
 
     var program = [],
