@@ -76,7 +76,7 @@
         if (running)
             timeOutValue = window.setTimeout(runProgram, timeOutNum);
     }
-    var isComment = /[^<>+-\[\].,]/;
+    var isComment = /[^<>+\-[\].,]/;
 
     function tokenizeProgram(text) {
         var prog = [],
