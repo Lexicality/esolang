@@ -131,6 +131,17 @@
         }
     })('rams');
 
+    var classes = {
+        '<': 'lt',
+        '>': 'gt',
+        '+': 'plus',
+        '-': 'dash',
+        '[': 'lbrk',
+        ']': 'rbrk',
+        '.': 'dot',
+        ',': 'coma',
+    };
+
     $('#program-compile').on('click', function() {
         var tarea, srccode, progEl, tokens, span;
         tarea = $('#program-input');
@@ -141,6 +152,11 @@
         tokens.forEach(function(token) {
             span = document.createElement('span');
             span.classList.add(token[0]);
+            if ('opcode' == token[0]) {
+                var tokenClass = classes[token[1]];
+                if (tokenClass)
+                    span.classList.add(token[0] + '-' + tokenClass);
+            }
             span.textContent = token[1];
             progEl.appendChild(span);
         });

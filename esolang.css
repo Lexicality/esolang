@@ -38,6 +38,37 @@ textarea, table, button {
 	background: rgb(230,230,230);
 	font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
 }
+.comment {
+	color: rgb(100, 100, 100);
+	font-style: italic;
+}
+
+/*
+.opcode-lt {
+	color: ;
+}
+.opcode-gt {
+	color: ;
+}
+.opcode-plus {
+	color: ;
+}
+.opcode-dash {
+	color: ;
+}
+.opcode-lbrk {
+	color: ;
+}
+.opcode-rbrk {
+	color: ;
+}
+.opcode-dot {
+	color: ;
+}
+.opcode-coma {
+	color: ;
+}
+*/
 
 #exec-speed-container {
 	display: flex;
