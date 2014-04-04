@@ -124,21 +124,29 @@
         var value = getRam();
 
         if (cmd == '+') {
-
+            value++;
+            if (value > 255)
+                value = 0;
+            setRam(value);
         } else if (cmd == '-') {
-
+            value--;
+            if (value < 0)
+                value = 255;
+            setRam(value);
         } else if (cmd == '<') {
-
+            decrementPointer();
         } else if (cmd == '>') {
-
+            incrementPointer();
         } else if (cmd == ',') {
 
         } else if (cmd == '.') {
-
+            stdout(String.fromCharCode(value));
         } else if (cmd == '[') {
-
+            if (!value)
+                pc = token[2];
         } else if (cmd == ']') {
-
+            if (value)
+                pc = token[2];
         } else {
             throw new Error("Unkown opcode '" + cmd + "'!");
         }
