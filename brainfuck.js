@@ -94,6 +94,11 @@
         ram = [];
         updatePointer(0);
         ramStack.clear();
+        var nodes = $$('.ram-cell');
+        var i;
+        for (i = 0; i < nodes.length; i++) {
+            nodes[i].textContent = 0;
+        }
     }
     resetRam();
 
