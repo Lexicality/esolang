@@ -1,10 +1,10 @@
 (function(global) {
     'use strict';
 
-    HTMLElement.prototype.on = function() {
+    var on = function() {
         this.addEventListener.apply(this, arguments);
     };
-    HTMLElement.prototype.empty = function() {
+    var empty = function() {
         while (this.firstChild) {
             // FIXME: Does this .remove() on the child? We don't want orphan nodes
             this.removeChild(this.firstChild);
@@ -12,7 +12,12 @@
     };
 
     function $(selector) {
-        return document.querySelector(selector);
+        var el = document.querySelector(selector);
+        if (!el)
+            return el;
+        el.on = on;
+        el.empty = empty;
+        return el;
     }
 
     function $$(selector) {
