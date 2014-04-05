@@ -203,7 +203,8 @@
     function tokenizeProgram(text) {
         var prog = [],
             loopStack = [],
-            currentComment = '';
+            currentComment = '',
+            counter = 0;
         var tokens = text.split('').forEach(function(token) {
             if (isComment.test(token)) {
                 currentComment += token;
@@ -214,17 +215,18 @@
                 currentComment = '';
             }
             if (token == '[') {
-                loopStack.push(prog.length);
+                loopStack.push([prog.length, counter]);
                 prog.push(['opcode', token, -1]);
             } else if (token == ']') {
                 if (!loopStack.length)
                     throw new Error("Unbalanced []s!");
                 var match = loopStack.pop();
-                prog[match][2] = prog.length;
-                prog.push(['opcode', token, match]);
+                prog[match[0]][2] = counter;
+                prog.push(['opcode', token, match[1]]);
             } else {
                 prog.push(['opcode', token]);
             }
+            counter++;
         });
         if (currentComment) {
             prog.push(['comment', currentComment]);
