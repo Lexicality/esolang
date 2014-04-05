@@ -45,28 +45,9 @@
 		<button id="program-compile">Compile</button>
 
 	</div>
+	<script src="tablebuilder.js"></script>
 	<script type="text/javascript">
-(function(id) { // TODO: Closure Compile pls
-	var createElement, appendChild, i, j, table, tbody, tr, td, numRows, numColumns;
-	numRows = 3;
-	numColumns = 30;
-	createElement = document.createElement.bind(document);
-	appendChild = 'appendChild';
-    table = document.getElementById(id);
-    tbody = table.querySelector('tbody');
-    for (i = 0; i < numRows; i++) {
-        tr = createElement('tr');
-        tr.id = "row-" + i;
-        for (j = 0; j < numColumns; j++) {
-            td = createElement('td');
-            td.textContent = 0;
-            td.id = "cell-" + (i * numColumns + j);
-            td.classList.add('ram-cell');
-            tr[appendChild](td);
-        }
-        tbody[appendChild](tr);
-    }
-})('rams');
+		constructTable('rams', 3, 30);
 	</script>
 	<script src="highlighter.js"></script>
 	<script src="brainfuck.js"></script>
