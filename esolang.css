@@ -47,6 +47,9 @@ textarea, table, button {
 	color: rgb(100, 100, 100);
 	font-style: italic;
 }
+#registers td {
+	text-align: center;
+}
 
 /*
 .opcode-lt {

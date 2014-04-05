@@ -56,6 +56,7 @@
         if (cell)
             cell.classList.remove('active-cell');
         ramPointer = num;
+        $('#ramPointer').textContent = ramPointer;
         cell = $('#cell-' + num);
         if (cell) {
             cell.classList.add('active-cell');
@@ -83,6 +84,7 @@
 
     function setRam(value) {
         ram[ramPointer] = value;
+        $('#memValue').textContent = "'" + String.fromCharCode(value) + "'";
         var cell = $('#cell-' + ramPointer);
         if (cell) {
             cell.textContent = value;
@@ -93,6 +95,7 @@
     function resetRam() {
         ram = [];
         updatePointer(0);
+        $('#memValue').textContent = "''";
         ramStack.clear();
         var nodes = $$('.ram-cell');
         var i;
@@ -108,6 +111,7 @@
 
     function resetProgram() {
         pc = 0;
+        $('#pc').textContent = pc;
         programStack.clear();
         resetRam();
     }
@@ -186,6 +190,7 @@
         }
 
         pc++;
+        $('#pc').textContent = pc;
         if (checkForProgramEnd())
             return;
         if (!didMemOperation)
