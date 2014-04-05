@@ -1,5 +1,10 @@
 @import "stack.css";
 
+body {
+	width: 1008px;
+	margin: 8px auto;
+}
+
 body,
 #program-controls {
 	display: flex;
