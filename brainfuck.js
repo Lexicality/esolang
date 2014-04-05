@@ -41,7 +41,7 @@
         running = false;
 
     var ram = [],
-        maxRams = 90, // FIXME We probably need more than 90. Say a 30k-ish?
+        maxRams = 30000, // FIXME The gui only shows 90
         ramPointer = 0,
         ramStack = new global.HighlightStack();
 
