@@ -1,0 +1,9 @@
+{
+    "[typescript]": {
+        "editor.formatOnPaste": true,
+        "editor.formatOnSave": true,
+        "editor.formatOnType": true
+    },
+    "javascript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false,
+    "typescript.format.insertSpaceAfterFunctionKeywordForAnonymousFunctions": false
+}
