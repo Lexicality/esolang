@@ -45,8 +45,8 @@
 		<button id="program-compile">Compile</button>
 
 	</div>
-	<script src="tablebuilder.js"></script>
-	<script type="text/javascript">
+	<script type="module">
+		import { constructTable } from "./build/tablebuilder.js";
 		constructTable('rams', 3, 30);
 	</script>
 	<script src="highlighter.js"></script>
