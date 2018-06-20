@@ -21,10 +21,13 @@ type MemoryOpcode = "<" | ">" | "+" | "-" | "." | ",";
 type LoopOpcode = "[" | "]";
 type Opcode = MemoryOpcode | LoopOpcode;
 
+type ParsedComment = ["comment", string];
+type ParsedOpcode = ["opcode", MemoryOpcode] | ["opcode", LoopOpcode, number];
+type ParserOutput = ParsedComment | ParsedOpcode;
+
 type ProgramStep =
-	| ["comment", string, undefined, undefined, HTMLSpanElement]
-	| ["opcode", MemoryOpcode, undefined, undefined, HTMLSpanElement]
-	| ["opcode", LoopOpcode, number, undefined, HTMLSpanElement];
+	| [undefined, MemoryOpcode, undefined, undefined, HTMLSpanElement]
+	| [undefined, LoopOpcode, number, undefined, HTMLSpanElement];
 
 var program: ProgramStep[] = [],
 	programStack = new HighlightStack(),
@@ -132,12 +135,8 @@ function runProgram() {
 }
 var isComment = /[^<>+\-[\].,]/;
 
-function token_(type: "comment" | "opcode", ...data: any[]): ProgramStep {
-	return [type, ...data] as ProgramStep;
-}
-
-function tokenizeProgram(text: string) {
-	var prog: ProgramStep[] = [],
+function tokenizeProgram(text: string): ParserOutput[] {
+	var prog: ParserOutput[] = [],
 		loopStack: [number, number][] = [],
 		currentComment = "",
 		counter = 0;
@@ -147,26 +146,26 @@ function tokenizeProgram(text: string) {
 			return;
 		}
 		if (currentComment) {
-			prog.push(token_("comment", currentComment));
+			prog.push(["comment", currentComment]);
 			currentComment = "";
 		}
 		if (token == "[") {
 			loopStack.push([prog.length, counter]);
-			prog.push(token_("opcode", token, -1));
+			prog.push(["opcode", token, -1]);
 		} else if (token == "]") {
 			var match = loopStack.pop();
 			if (!match) {
 				throw new Error("Unbalanced []s!");
 			}
 			prog[match[0]][2] = counter;
-			prog.push(token_("opcode", token, match[1]));
+			prog.push(["opcode", token, match[1]]);
 		} else {
-			prog.push(token_("opcode", token as Opcode));
+			prog.push(["opcode", token as MemoryOpcode]);
 		}
 		counter++;
 	});
 	if (currentComment) {
-		prog.push(token_("comment", currentComment));
+		prog.push(["comment", currentComment]);
 	}
 	if (loopStack.length > 0) {
 		throw new Error("Unbalanced []s!");
@@ -199,22 +198,31 @@ $("#program-compile").addEventListener("click", function() {
 	let progEl = $("#program");
 	emptyElement(progEl);
 	let tokens = tokenizeProgram(srccode);
-	tokens.forEach(function(token) {
-		let span = document.createElement("span");
-		span.classList.add(token[0]);
-		if ("opcode" == token[0]) {
-			var tokenClass = classes[token[1]];
-			if (tokenClass) {
-				span.classList.add(token[0] + "-" + tokenClass);
-			}
-		}
-		span.textContent = token[1];
-		token[4] = span;
-		progEl.appendChild(span);
-	});
-	program = tokens.filter(function(token) {
-		return token[0] == "opcode";
-	});
+	program = tokens
+		.map(
+			(token): ProgramStep | undefined => {
+				let span = document.createElement("span");
+				span.classList.add(token[0]);
+				span.textContent = token[1];
+				progEl.appendChild(span);
+				if ("opcode" == token[0]) {
+					var tokenClass = classes[token[1]];
+					if (tokenClass) {
+						span.classList.add(token[0] + "-" + tokenClass);
+					}
+
+					return [
+						undefined,
+						token[1],
+						token[2],
+						undefined,
+						span,
+					] as any;
+				}
+				return undefined;
+			},
+		)
+		.filter((token): token is ProgramStep => !!token);
 	resetProgram();
 });
 
