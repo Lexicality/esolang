@@ -1,8 +1,16 @@
-import { $, $$, stdout, stdin } from "./build/utils.js";
+import { $ as $_, $$, stdout, stdin } from "./utils.js";
 
-import { initRam } from "./build/rams.js";
+import { initRam } from "./rams.js";
 
-import { HighlightStack } from "./build/highlighter.js";
+import { HighlightStack } from "./highlighter.js";
+
+function $(selector: string) {
+	let el = $_(selector);
+	if (!el) {
+		throw new Error(`Invalid selector ${selector}!`);
+	}
+	return el;
+}
 
 const {
 	resetRam,
@@ -17,13 +25,18 @@ var timeOutNum = 1000,
 	timeOutValue = 0,
 	running = false;
 
-var program = [],
+type opcode = "<" | ">" | "+" | "-" | "." | "," | "[" | "]";
+type programStep =
+	| ["comment", string, undefined, undefined, HTMLSpanElement]
+	| ["opcode", opcode, number | undefined, undefined, HTMLSpanElement];
+
+var program: programStep[] = [],
 	programStack = new HighlightStack(),
 	pc = 0;
 
 function resetProgram() {
 	pc = 0;
-	$("#pc").textContent = pc;
+	$("#pc").textContent = pc.toFixed(0);
 	programStack.clear();
 	resetRam();
 }
@@ -53,9 +66,10 @@ function runProgram() {
 	if (checkForProgramEnd()) {
 		return;
 	}
-	var token = program[pc],
-		cmd = token[1];
-	programStack.promote(token[4]);
+	let token = program[pc];
+	let cmd = token[1];
+	let el = token[4];
+	programStack.promote(el);
 	var didMemOperation = !(cmd == "[" || cmd == "]");
 	var value = getRam();
 
@@ -76,9 +90,9 @@ function runProgram() {
 	} else if (cmd == ">") {
 		incrementPointer();
 	} else if (cmd == ",") {
-		value = stdin();
-		if ("" !== value) {
-			value = value.charCodeAt(0);
+		let input = stdin();
+		if ("" !== input) {
+			value = input.charCodeAt(0);
 			// Sorry Unicode!
 			if (value > 255) {
 				value = 255;
@@ -98,18 +112,18 @@ function runProgram() {
 		stdout(String.fromCharCode(value));
 	} else if (cmd == "[") {
 		if (!value) {
-			pc = token[2];
+			pc = token[2]!;
 		}
 	} else if (cmd == "]") {
 		if (value) {
-			pc = token[2];
+			pc = token[2]!;
 		}
 	} else {
 		throw new Error("Unkown opcode '" + cmd + "'!");
 	}
 
 	pc++;
-	$("#pc").textContent = pc;
+	$("#pc").textContent = pc.toFixed(0);
 	if (checkForProgramEnd()) {
 		return;
 	}
@@ -122,9 +136,13 @@ function runProgram() {
 }
 var isComment = /[^<>+\-[\].,]/;
 
-function tokenizeProgram(text) {
-	var prog = [],
-		loopStack = [],
+function token_(type: "comment" | "opcode", ...data: any[]): programStep {
+	return [type, ...data] as programStep;
+}
+
+function tokenizeProgram(text: string) {
+	var prog: programStep[] = [],
+		loopStack: [number, number][] = [],
 		currentComment = "",
 		counter = 0;
 	var tokens = text.split("").forEach(function(token) {
@@ -133,36 +151,34 @@ function tokenizeProgram(text) {
 			return;
 		}
 		if (currentComment) {
-			prog.push(["comment", currentComment]);
+			prog.push(token_("comment", currentComment));
 			currentComment = "";
 		}
 		if (token == "[") {
 			loopStack.push([prog.length, counter]);
-			prog.push(["opcode", token, -1]);
+			prog.push(token_("opcode", token, -1));
 		} else if (token == "]") {
-			if (!loopStack.length) {
+			var match = loopStack.pop();
+			if (!match) {
 				throw new Error("Unbalanced []s!");
 			}
-			var match = loopStack.pop();
 			prog[match[0]][2] = counter;
-			prog.push(["opcode", token, match[1]]);
+			prog.push(token_("opcode", token, match[1]));
 		} else {
-			prog.push(["opcode", token]);
+			prog.push(token_("opcode", token as opcode));
 		}
 		counter++;
 	});
 	if (currentComment) {
-		prog.push(["comment", currentComment]);
+		prog.push(token_("comment", currentComment));
 	}
 	if (loopStack.length > 0) {
 		throw new Error("Unbalanced []s!");
 	}
 	return prog;
 }
-// debug
-window.tokenizeProgram = tokenizeProgram;
 
-var classes = {
+var classes: { [key: string]: string } = {
 	"<": "lt",
 	">": "gt",
 	"+": "plus",
@@ -174,15 +190,14 @@ var classes = {
 };
 
 $("#program-compile").on("click", function() {
-	var tarea, srccode, progEl, tokens, span;
-	tarea = $("#program-input");
-	srccode = tarea.value.trim();
+	let tarea = ($("#program-input") as any) as HTMLTextAreaElement;
+	let srccode = tarea.value.trim();
 	tarea.value = "";
-	progEl = $("#program");
+	let progEl = $("#program");
 	progEl.empty();
-	tokens = tokenizeProgram(srccode);
+	let tokens = tokenizeProgram(srccode);
 	tokens.forEach(function(token) {
-		span = document.createElement("span");
+		let span = document.createElement("span");
 		span.classList.add(token[0]);
 		if ("opcode" == token[0]) {
 			var tokenClass = classes[token[1]];
@@ -201,7 +216,7 @@ $("#program-compile").on("click", function() {
 });
 
 $("#exec-speed").on("change", function() {
-	timeOutNum = this.value;
+	timeOutNum = parseInt((this as HTMLInputElement).value);
 });
 $("#program-step").on("click", function() {
 	runProgram();
