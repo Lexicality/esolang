@@ -1,9 +1,10 @@
-@colour: blue;//rgb(100, 149, 237);
+@colour: blue; //rgb(100, 149, 237);
 
 .colour(@a) when(@a = 0) {
 	color: white;
 }
-.colour(@a){}
+.colour(@a) {
+}
 
 .trail(@step) when(@step >= 0) {
 	.trail-step-@{step} {
@@ -12,6 +13,7 @@
 	}
 	.trail(@step - 1);
 }
-.trail(-1) {}
+.trail(-1) {
+}
 
 .trail(4);

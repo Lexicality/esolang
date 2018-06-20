@@ -9,7 +9,8 @@ body,
 #program-controls {
 	display: flex;
 }
-#content, #controls {
+#content,
+#controls {
 	/*padding: 5px;*/
 	flex: 1;
 }
@@ -18,12 +19,17 @@ body,
 	flex: 4;
 }
 
-h2, p {
+h2,
+p {
 	margin: 0;
 	padding: 0;
 }
 
-h1,h2,h3,h4,h4 {
+h1,
+h2,
+h3,
+h4,
+h4 {
 	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
@@ -31,7 +37,9 @@ textarea {
 	resize: none;
 }
 
-textarea, table, button {
+textarea,
+table,
+button {
 	width: 100%;
 	box-sizing: border-box;
 }
@@ -45,8 +53,9 @@ textarea, table, button {
 	white-space: pre-wrap;
 	width: 100%;
 	min-height: 100px;
-	background: rgb(230,230,230);
-	font-family: "Courier New", Courier, "Lucida Sans Typewriter", "Lucida Typewriter", monospace;
+	background: rgb(230, 230, 230);
+	font-family: "Courier New", Courier, "Lucida Sans Typewriter",
+		"Lucida Typewriter", monospace;
 }
 .comment {
 	color: rgb(100, 100, 100);
@@ -99,4 +108,3 @@ textarea, table, button {
 
 #stdout {
 }
-

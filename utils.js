@@ -12,8 +12,9 @@
 
 	function $(selector) {
 		var el = document.querySelector(selector);
-		if (!el)
+		if (!el) {
 			return el;
+		}
 		el.on = on;
 		el.empty = empty;
 		return el;
@@ -24,16 +25,16 @@
 	}
 
 	function stdout(msg) {
-		$('#stdout').textContent += msg;
+		$("#stdout").textContent += msg;
 	}
 
 	function stdin() {
-		var el = $('#stdin');
+		var el = $("#stdin");
 		var value = el.value;
 		if (!value.length) {
-			return '';
+			return "";
 		} else if (1 == value.length) {
-			el.value = '';
+			el.value = "";
 			return value;
 		}
 		var ret = value.substr(0, 1);

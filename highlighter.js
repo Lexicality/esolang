@@ -1,21 +1,38 @@
 (function(global) {
-	'use strict';
+	"use strict";
 
 	var maxStack = 5,
-		className = 'trail-step-';
+		className = "trail-step-";
 
 	var guid = (function() {
 		function fourChars() {
-			return (((1 + Math.random()) * 0x10000) | 0).toString(16).substring(1).toUpperCase();
+			return (((1 + Math.random()) * 0x10000) | 0)
+				.toString(16)
+				.substring(1)
+				.toUpperCase();
 		}
 		return function() {
-			return (fourChars() + fourChars() + "-" + fourChars() + "-" + fourChars() + "-" + fourChars() + "-" + fourChars() + fourChars() + fourChars());
+			return (
+				fourChars() +
+				fourChars() +
+				"-" +
+				fourChars() +
+				"-" +
+				fourChars() +
+				"-" +
+				fourChars() +
+				"-" +
+				fourChars() +
+				fourChars() +
+				fourChars()
+			);
 		};
 	})();
 
 	function getGuid(el) {
-		if (el._guid)
+		if (el._guid) {
 			return el._guid;
+		}
 		return (el._guid = guid());
 	}
 
@@ -30,8 +47,9 @@
 	StackItem.prototype.setStage = function(stage) {
 		var cl = this.el.classList;
 		cl.remove(className + this.stage);
-		if (stage < maxStack)
+		if (stage < maxStack) {
 			cl.add(className + stage);
+		}
 		this.stage = stage;
 	};
 	StackItem.prototype.deactivate = function() {
@@ -51,20 +69,23 @@
 	};
 
 	HighlightStack.prototype.promote = function(el) {
-		if (!el)
+		if (!el) {
 			return;
-		else if (!(el instanceof HTMLElement))
+		} else if (!(el instanceof HTMLElement)) {
 			throw new Error("Invalid argument");
+		}
 		this.decay();
 		var guid = getGuid(el);
 		var item = this.lookup[guid];
-		if (item)
+		if (item) {
 			return this._existingItem(item);
+		}
 		item = new StackItem(el);
 		this.lookup[guid] = item;
 		this.items.unshift(item);
-		if (this.items.length > maxStack)
+		if (this.items.length > maxStack) {
 			delete this.lookup[this.items.pop().el];
+		}
 	};
 
 	HighlightStack.prototype._existingItem = function(item) {
