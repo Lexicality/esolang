@@ -17,12 +17,16 @@ var timeOutNum = 1000,
 	timeOutValue = 0,
 	running = false;
 
-type opcode = "<" | ">" | "+" | "-" | "." | "," | "[" | "]";
-type programStep =
-	| ["comment", string, undefined, undefined, HTMLSpanElement]
-	| ["opcode", opcode, number | undefined, undefined, HTMLSpanElement];
+type MemoryOpcode = "<" | ">" | "+" | "-" | "." | ",";
+type LoopOpcode = "[" | "]";
+type Opcode = MemoryOpcode | LoopOpcode;
 
-var program: programStep[] = [],
+type ProgramStep =
+	| ["comment", string, undefined, undefined, HTMLSpanElement]
+	| ["opcode", MemoryOpcode, undefined, undefined, HTMLSpanElement]
+	| ["opcode", LoopOpcode, number, undefined, HTMLSpanElement];
+
+var program: ProgramStep[] = [],
 	programStack = new HighlightStack(),
 	pc = 0;
 
@@ -128,12 +132,12 @@ function runProgram() {
 }
 var isComment = /[^<>+\-[\].,]/;
 
-function token_(type: "comment" | "opcode", ...data: any[]): programStep {
-	return [type, ...data] as programStep;
+function token_(type: "comment" | "opcode", ...data: any[]): ProgramStep {
+	return [type, ...data] as ProgramStep;
 }
 
 function tokenizeProgram(text: string) {
-	var prog: programStep[] = [],
+	var prog: ProgramStep[] = [],
 		loopStack: [number, number][] = [],
 		currentComment = "",
 		counter = 0;
@@ -157,7 +161,7 @@ function tokenizeProgram(text: string) {
 			prog[match[0]][2] = counter;
 			prog.push(token_("opcode", token, match[1]));
 		} else {
-			prog.push(token_("opcode", token as opcode));
+			prog.push(token_("opcode", token as Opcode));
 		}
 		counter++;
 	});
