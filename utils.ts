@@ -1,31 +1,8 @@
-var empty = function(this: HTMLElement) {
-	while (this.firstChild) {
-		// FIXME: Does this .remove() on the child? We don't want orphan nodes
-		this.removeChild(this.firstChild);
-	}
-};
-
-interface AugmentedHTMLElement extends HTMLElement {
-	on<K extends keyof HTMLElementEventMap>(
-		type: K,
-		listener: (this: HTMLElement, ev: HTMLElementEventMap[K]) => any,
-		options?: boolean | AddEventListenerOptions,
-	): void;
-	on(
-		type: string,
-		listener: EventListenerOrEventListenerObject,
-		options?: boolean | AddEventListenerOptions,
-	): void;
-	empty: (this: HTMLElement) => void;
-}
-
-export function $(selector: string): AugmentedHTMLElement | null {
-	var el = document.querySelector(selector) as AugmentedHTMLElement | null;
+export function $<E = HTMLElement>(selector: string): E {
+	var el = document.querySelector(selector) as E | null;
 	if (!el) {
-		return el;
+		throw new Error(`Missing HTML element ${selector}!`);
 	}
-	el.on = el.addEventListener;
-	el.empty = empty;
 	return el;
 }
 
@@ -34,11 +11,11 @@ export function $$(selector: string) {
 }
 
 export function stdout(msg: string): void {
-	$("#stdout")!.textContent += msg;
+	$("#stdout").textContent += msg;
 }
 
 export function stdin(): string {
-	var el = ($("#stdin") as any) as HTMLTextAreaElement;
+	var el: HTMLTextAreaElement = $("#stdin");
 	var value = el.value;
 	if (!value.length) {
 		return "";

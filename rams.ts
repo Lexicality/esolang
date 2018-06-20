@@ -13,14 +13,14 @@ function touchCell(cell: RAMElement): void {
 }
 
 function updatePointer(num: number): void {
-	var cell;
+	var cell: RAMElement;
 	// TODO: Validate num
 	cell = $("#cell-" + ramPointer);
 	if (cell) {
 		cell.classList.remove("active-cell");
 	}
 	ramPointer = num;
-	$("#ramPointer")!.textContent = ramPointer.toFixed(0);
+	$("#ramPointer").textContent = ramPointer.toFixed(0);
 	cell = $("#cell-" + num);
 	if (cell) {
 		cell.classList.add("active-cell");
@@ -50,7 +50,7 @@ function getRam(): number {
 
 function setRam(value: number): void {
 	ram[ramPointer] = value;
-	$("#memValue")!.textContent = "'" + String.fromCharCode(value) + "'";
+	$("#memValue").textContent = "'" + String.fromCharCode(value) + "'";
 	var cell = $("#cell-" + ramPointer);
 	if (cell) {
 		cell.textContent = value.toFixed(0);
@@ -61,7 +61,7 @@ function setRam(value: number): void {
 function resetRam(): void {
 	ram = [];
 	updatePointer(0);
-	$("#memValue")!.textContent = "''";
+	$("#memValue").textContent = "''";
 	ramStack.clear();
 	var nodes = $$(".ram-cell");
 	var i;

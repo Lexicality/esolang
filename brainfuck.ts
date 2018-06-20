@@ -1,16 +1,8 @@
-import { $ as $_, $$, stdout, stdin } from "./utils.js";
+import { $, $$, stdout, stdin } from "./utils.js";
 
 import { initRam } from "./rams.js";
 
 import { HighlightStack } from "./highlighter.js";
-
-function $(selector: string) {
-	let el = $_(selector);
-	if (!el) {
-		throw new Error(`Invalid selector ${selector}!`);
-	}
-	return el;
-}
 
 const {
 	resetRam,
@@ -178,6 +170,13 @@ function tokenizeProgram(text: string) {
 	return prog;
 }
 
+function emptyElement(el: HTMLElement): void {
+	while (el.firstChild) {
+		// FIXME: Does el .remove() on the child? We don't want orphan nodes
+		el.removeChild(el.firstChild);
+	}
+}
+
 var classes: { [key: string]: string } = {
 	"<": "lt",
 	">": "gt",
@@ -189,12 +188,12 @@ var classes: { [key: string]: string } = {
 	",": "coma",
 };
 
-$("#program-compile").on("click", function() {
-	let tarea = ($("#program-input") as any) as HTMLTextAreaElement;
+$("#program-compile").addEventListener("click", function() {
+	let tarea: HTMLTextAreaElement = $("#program-input");
 	let srccode = tarea.value.trim();
 	tarea.value = "";
 	let progEl = $("#program");
-	progEl.empty();
+	emptyElement(progEl);
 	let tokens = tokenizeProgram(srccode);
 	tokens.forEach(function(token) {
 		let span = document.createElement("span");
@@ -215,19 +214,19 @@ $("#program-compile").on("click", function() {
 	resetProgram();
 });
 
-$("#exec-speed").on("change", function() {
+$("#exec-speed").addEventListener("change", function() {
 	timeOutNum = parseInt((this as HTMLInputElement).value);
 });
-$("#program-step").on("click", function() {
+$("#program-step").addEventListener("click", function() {
 	runProgram();
 });
-$("#program-pause").on("click", function() {
+$("#program-pause").addEventListener("click", function() {
 	if (running) {
 		haltProgram();
 	} else {
 		resumeProgram();
 	}
 });
-$("#program-restart").on("click", function() {
+$("#program-restart").addEventListener("click", function() {
 	resetProgram();
 });
