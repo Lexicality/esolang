@@ -88,6 +88,7 @@ export class RAMStack {
 		this.stack.reset();
 		$$<RAMElement>(".ram-cell").forEach((node) => {
 			node.textContent = "0";
+			node.classList.remove("active-cell");
 		});
 	}
 }
