@@ -22,12 +22,12 @@ type LoopOpcode = "[" | "]";
 type Opcode = MemoryOpcode | LoopOpcode;
 
 type ParsedComment = ["comment", string];
-type ParsedOpcode = ["opcode", MemoryOpcode] | ["opcode", LoopOpcode, number];
+type ParsedOpcode =
+	| ["opcode", MemoryOpcode, undefined]
+	| ["opcode", LoopOpcode, number];
 type ParserOutput = ParsedComment | ParsedOpcode;
 
-type ProgramStep =
-	| [undefined, MemoryOpcode, undefined, undefined, HTMLSpanElement]
-	| [undefined, LoopOpcode, number, undefined, HTMLSpanElement];
+type ProgramStep = [Opcode, number | undefined, HTMLSpanElement];
 
 var program: ProgramStep[] = [],
 	programStack = new HighlightStack(),
@@ -65,9 +65,7 @@ function runProgram() {
 	if (checkForProgramEnd()) {
 		return;
 	}
-	let token = program[pc];
-	let cmd = token[1];
-	let el = token[4];
+	let [cmd, param, el] = program[pc];
 	programStack.promote(el);
 	var didMemOperation = !(cmd == "[" || cmd == "]");
 	var value = getRam();
@@ -111,11 +109,11 @@ function runProgram() {
 		stdout(String.fromCharCode(value));
 	} else if (cmd == "[") {
 		if (!value) {
-			pc = token[2]!;
+			pc = param!;
 		}
 	} else if (cmd == "]") {
 		if (value) {
-			pc = token[2]!;
+			pc = param!;
 		}
 	} else {
 		throw new Error("Unkown opcode '" + cmd + "'!");
@@ -160,7 +158,7 @@ function tokenizeProgram(text: string): ParserOutput[] {
 			prog[match[0]][2] = counter;
 			prog.push(["opcode", token, match[1]]);
 		} else {
-			prog.push(["opcode", token as MemoryOpcode]);
+			prog.push(["opcode", token as MemoryOpcode, undefined]);
 		}
 		counter++;
 	});
@@ -191,6 +189,10 @@ var classes: { [key: string]: string } = {
 	",": "coma",
 };
 
+function is_opcode(output: ParserOutput): output is ParsedOpcode {
+	return output[0] == "opcode";
+}
+
 $("#program-compile").addEventListener("click", function() {
 	let tarea: HTMLTextAreaElement = $("#program-input");
 	let srccode = tarea.value.trim();
@@ -205,19 +207,13 @@ $("#program-compile").addEventListener("click", function() {
 				span.classList.add(token[0]);
 				span.textContent = token[1];
 				progEl.appendChild(span);
-				if ("opcode" == token[0]) {
+				if (is_opcode(token)) {
 					var tokenClass = classes[token[1]];
 					if (tokenClass) {
 						span.classList.add(token[0] + "-" + tokenClass);
 					}
 
-					return [
-						undefined,
-						token[1],
-						token[2],
-						undefined,
-						span,
-					] as any;
+					return [token[1], token[2], span];
 				}
 				return undefined;
 			},
