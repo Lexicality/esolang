@@ -1,13 +1,21 @@
-export function $<E = HTMLElement>(selector: string): E {
-	var el = document.querySelector(selector) as E | null;
-	if (!el) {
+export function $<E extends Element = HTMLElement>(selector: string): E;
+export function $<E extends Element = HTMLElement>(
+	selector: string,
+	noCheck: boolean,
+): E | null;
+export function $<E extends Element = HTMLElement>(
+	selector: string,
+	noCheck = false,
+): E | null {
+	var el = document.querySelector<E>(selector);
+	if (!el && !noCheck) {
 		throw new Error(`Missing HTML element ${selector}!`);
 	}
 	return el;
 }
 
-export function $$(selector: string) {
-	return document.querySelectorAll(selector);
+export function $$<E extends Element = HTMLElement>(selector: string) {
+	return document.querySelectorAll<E>(selector);
 }
 
 export function stdout(msg: string): void {
