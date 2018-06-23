@@ -80,7 +80,6 @@ function runProgram() {
 	}
 	let [cmd, param, el] = program[pc];
 	programStack.promote(el);
-	var didMemOperation = !(cmd == "[" || cmd == "]");
 	var value = ram.value;
 
 	if (cmd == "+") {
@@ -100,16 +99,18 @@ function runProgram() {
 			// UH-OH, the user hasn't entered anything into stdin.
 			// Wait until they do.
 			// TODO: Maybe some kind of notification?
-			didMemOperation = false;
 			pc--;
 		}
 	} else if (cmd == ".") {
 		stdout(String.fromCharCode(value));
+		ram.readValue();
 	} else if (cmd == "[") {
+		ram.readValue();
 		if (!value) {
 			pc = param!;
 		}
 	} else if (cmd == "]") {
+		ram.readValue();
 		if (value) {
 			pc = param!;
 		}
@@ -121,9 +122,6 @@ function runProgram() {
 	$("#pc").textContent = pc.toFixed(0);
 	if (checkForProgramEnd()) {
 		return;
-	}
-	if (!didMemOperation) {
-		ram.tick();
 	}
 	if (running) {
 		timeOutValue = window.setTimeout(runProgram, timeOutNum);

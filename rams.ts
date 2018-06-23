@@ -78,6 +78,13 @@ export class RAMStack {
 		}
 	}
 
+	public readValue(): void {
+		let cell = this.getCurrentCell();
+		if (cell) {
+			this.stack.promote(cell);
+		}
+	}
+
 	public tick(): void {
 		this.stack.tick();
 	}
