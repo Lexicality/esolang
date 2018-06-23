@@ -200,8 +200,9 @@ $("#program-compile").addEventListener("click", function() {
 	let tokens = tokenizeProgram(srccode);
 	program = tokens
 		.map(
-			(token): ProgramStep | undefined => {
+			(token: ParserOutput, i: number): ProgramStep | undefined => {
 				let span = document.createElement("span");
+				span.id = `program-${i}`;
 				span.classList.add(token[0]);
 				span.textContent = token[1];
 				progEl.appendChild(span);
