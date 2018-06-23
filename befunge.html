@@ -4,38 +4,84 @@
 	<meta charset="utf-8">
 	<title>Befunge</title>
 	<link rel="stylesheet" type="text/css" href="esolang.css">
+	<style type="text/css">
+	#content {
+		flex: 6;
+	}
+	#stack {
+		flex: 1;
+		text-align: center;
+	}
+	#program {
+		border-collapse: collapse;
+	}
+	#program td {
+		background: rgb(230, 230, 230);
+		font-family: "Courier New", Courier, "Lucida Sans Typewriter",
+			"Lucida Typewriter", monospace;
+		text-align: center;
+		margin: 0;
+		font-size: 12px;
+		line-height: 1em;
+		width: 1em;
+		height: 1em;
+	}
+	</style>
+	<link rel="modulepreload" href="./build/tablebuilder.js" />
+	<link rel="modulepreload" href="./build/utils.js" />
+	<link rel="modulepreload" href="./build/highlighter.js" />
+	<link rel="modulepreload" href="./build/rams.js" />
+	<link rel="modulepreload" href="./build/befunge.js" />
 <body>
 	<div id="content">
 		<h2>Program</h2>
-		<p id="program" class="srccode">&nbsp;</p>
+		<table id="program">
+			<tbody></tbody>
+		</table>
+		<!-- <p id="program" class="srccode">&nbsp;</p> -->
 		<h2>STDOut</h2>
 		<p id="stdout" class="srccode">&nbsp;</p>
 		<h2>STDIn</h2>
 		<textarea id="stdin" rows="3"></textarea>
 	</div>
+	<div id="stack">
+		<h2>Stack</h2>
+		<table id="stack-data" border="1">
+			<tbody></tbody>
+		</table>
+	</div>
 	<div id="controls">
+		<h2>State</h2>
+		<table id="state" border="1">
+			<tbody>
+                <tr><th scope="row">PC</th><td id="pc"></td></tr>
+                <tr><th scope="row">Dir</th><td id="dir"></td></tr>
+            </tbody>
+		</table>
+
 		<h2>Controls</h2>
 		<div id="program-controls">
-			<button id="program-pause">Pause</button>
+			<button id="program-pause">Resume</button>
+			<button id="program-step">Step</button>
 			<button id="program-restart">Restart</button>
 		</div>
+
 		<h2>Execution Speed</h2>
 		<div id="exec-speed-container">
 			<input id="exec-speed" type="number" value="1000" min="0">
 			<span>ms</span>
 		</div>
-		<h2>Stack</h2>
-		<table id="stack" border="1">
-			<thead><tr>
-				<th>#</th><th>Value</th>
-			</tr></thead>
-			<tbody></tbody>
-		</table>
+
 		<h2>Program Input</h2>
 		<textarea id="program-input" rows="5"></textarea>
 		<button id="program-compile">Compile</button>
 
 	</div>
-	<script src="brainfuck.js"></script>
+	<script type="module">
+		import { constructTable } from "./build/tablebuilder.js";
+		constructTable('stack-data', 30, 1);
+		constructTable('program', 25, 80, " ");
+	</script>
+	<script type="module" src="./build/befunge.js"></script>
 </body>
 </html>
