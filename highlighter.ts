@@ -63,7 +63,7 @@ export class HighlightStack<E extends HTMLElement = HTMLElement> {
 		}
 	}
 
-	public promote(el: E): void {
+	public promote(el: E, tick = true): void {
 		if (!el) {
 			return;
 		} else if (!(el instanceof HTMLElement)) {
@@ -75,7 +75,9 @@ export class HighlightStack<E extends HTMLElement = HTMLElement> {
 			throw new Error("Unknown element passed!");
 		}
 
-		this.tick();
+		if (tick) {
+			this.tick();
+		}
 		item.stage = MAX_STAGE;
 	}
 
