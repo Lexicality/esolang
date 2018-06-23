@@ -1,19 +1,21 @@
+@MAX_TRAIL: 5;
 @colour: blue; //rgb(100, 149, 237);
 
-.colour(@a) when(@a = 0) {
+.colour(@step) when(@step >= @MAX_TRAIL / 2) {
 	color: white;
 }
-.colour(@a) {
+.colour(@step) {
 }
 
-.trail(@step) when(@step >= 0) {
+.trail(@step) when(@step > 0) {
 	.trail-step-@{step} {
 		.colour(@step);
-		background-color: lighten(@colour, @step * 10);
+		background-color: lighten(blue, (@MAX_TRAIL - @step) * 10);
 	}
+
 	.trail(@step - 1);
 }
-.trail(-1) {
+.trail(@step) {
 }
 
-.trail(4);
+.trail(5);

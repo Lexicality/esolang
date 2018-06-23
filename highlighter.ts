@@ -1,116 +1,87 @@
-var maxStack = 5,
-	className = "trail-step-";
+const MAX_STAGE = 5;
 
-var guid = (function() {
-	function fourChars() {
-		return (((1 + Math.random()) * 0x10000) | 0)
-			.toString(16)
-			.substring(1)
-			.toUpperCase();
-	}
-	return function() {
-		return (
-			fourChars() +
-			fourChars() +
-			"-" +
-			fourChars() +
-			"-" +
-			fourChars() +
-			"-" +
-			fourChars() +
-			"-" +
-			fourChars() +
-			fourChars() +
-			fourChars()
-		);
-	};
-})();
+class StackItem<E extends HTMLElement> {
+	private el: E;
+	private _stage = 0;
 
-function getGuid(el: any): string {
-	if (!el._guid) {
-		el._guid = guid();
-	}
-	return el._guid;
-}
-
-class StackItem {
-	private el: HTMLElement;
-	private stage: number;
-
-	get guid(): string {
-		return getGuid(this.el);
+	public get id(): string {
+		return this.el.id;
 	}
 
-	constructor(el: HTMLElement) {
+	private getClassName(): string {
+		return `trail-step-${this.stage}`;
+	}
+
+	constructor(el: E) {
 		this.el = el;
+		// Set the setter directly
 		this.stage = 0;
-		this.el.classList.add(className + 0);
 	}
 
-	step(): void {
-		this.setStage(this.stage + 1);
+	public get stage() {
+		return this._stage;
 	}
 
-	setStage(stage: number): void {
-		var cl = this.el.classList;
-		cl.remove(className + this.stage);
-		if (stage < maxStack) {
-			cl.add(className + stage);
+	public set stage(stage: number) {
+		this.el.classList.remove(this.getClassName());
+		if (stage < 0) {
+			stage = 0;
 		}
-		this.stage = stage;
+		this._stage = stage;
+		this.el.classList.add(this.getClassName());
 	}
 
-	deactivate(): void {
-		this.el.classList.remove(className + this.stage);
+	public tick() {
+		if (this.stage > 0) {
+			this.stage -= 1;
+		}
+	}
+
+	public reset(): void {
+		this.stage = 0;
 	}
 }
 
-export class HighlightStack {
-	private items: StackItem[];
-	private lookup: { [guid: string]: StackItem };
+export class HighlightStack<E extends HTMLElement = HTMLElement> {
+	private items: StackItem<E>[];
+	private lookup: { [id: string]: StackItem<E> };
 
-	constructor() {
-		this.items = [];
+	constructor(nodes: NodeListOf<E>) {
+		this.items = Array.prototype.map.call(
+			nodes,
+			(node: E) => new StackItem(node),
+		);
 		this.lookup = {};
+		for (let item of this.items) {
+			this.lookup[item.id] = item;
+		}
 	}
 
-	decay(): void {
-		this.items.forEach((item) => item.step());
+	public tick(): void {
+		for (let item of this.items) {
+			item.tick();
+		}
 	}
 
-	private lookupItem(el: HTMLElement) {}
-
-	promote(el: HTMLElement): void {
+	public promote(el: E): void {
 		if (!el) {
 			return;
 		} else if (!(el instanceof HTMLElement)) {
 			throw new Error("Invalid argument");
 		}
 
-		this.decay();
-		var guid = getGuid(el);
-		var item = this.lookup[guid];
-		if (item) {
-			return this.promoteExistingItem(item);
+		let item = this.lookup[el.id];
+		if (!item) {
+			throw new Error("Unknown element passed!");
 		}
-		item = new StackItem(el);
-		this.lookup[guid] = item;
-		this.items.unshift(item);
-		if (this.items.length > maxStack) {
-			let toKill = this.items.pop();
-			delete this.lookup[toKill!.guid];
-		}
+
+		this.tick();
+		item.stage = MAX_STAGE;
 	}
 
-	private promoteExistingItem(item: StackItem): void {
-		this.items.splice(this.items.indexOf(item), 1);
-		this.items.unshift(item);
-		item.setStage(0);
-	}
-
-	clear(): void {
-		this.items.forEach((item) => item.deactivate);
-		this.items = [];
-		this.lookup = {};
+	public reset(): void {
+		for (let item of this.items) {
+			item.reset();
+		}
 	}
 }

@@ -12,7 +12,7 @@ export class RAMStack {
 	private data: number[];
 
 	constructor(size = MAX_RAM) {
-		this.stack = new HighlightStack();
+		this.stack = new HighlightStack($$(".ram-cell"));
 		this.size = size;
 		this.data = new Array(this.size);
 		// Use the reset function to clean up the display
@@ -79,13 +79,13 @@ export class RAMStack {
 	}
 
 	public tick(): void {
-		this.stack.decay();
+		this.stack.tick();
 	}
 
 	public reset(): void {
 		this.data = new Array(this.size);
 		this._pointer = 0;
-		this.stack.clear();
+		this.stack.reset();
 		$$<RAMElement>(".ram-cell").forEach((node) => {
 			node.textContent = "0";
 		});

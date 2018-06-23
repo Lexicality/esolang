@@ -22,14 +22,14 @@ type ParserOutput = ParsedComment | ParsedOpcode;
 
 type ProgramStep = [Opcode, number | undefined, HTMLSpanElement];
 
-var program: ProgramStep[] = [],
-	programStack = new HighlightStack(),
-	pc = 0;
+let program: ProgramStep[] = [];
+let programStack: HighlightStack<HTMLSpanElement>;
+let pc = 0;
 
 function resetProgram() {
 	pc = 0;
 	$("#pc").textContent = pc.toFixed(0);
-	programStack.clear();
+	programStack.reset();
 	ram.reset();
 }
 
@@ -218,6 +218,8 @@ $("#program-compile").addEventListener("click", function() {
 			},
 		)
 		.filter((token): token is ProgramStep => !!token);
+
+	programStack = new HighlightStack($$("#program > .opcode"));
 	resetProgram();
 });
 
