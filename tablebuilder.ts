@@ -7,6 +7,7 @@ export function constructTable(
 	id: string,
 	numRows: number,
 	numColumns: number,
+	content: string = "0",
 ) {
 	var createElement, i, j, table, tbody, tr, td;
 	createElement = document.createElement.bind(document);
@@ -20,7 +21,7 @@ export function constructTable(
 		tr.id = "row-" + i;
 		for (j = 0; j < numColumns; j++) {
 			td = createElement("td");
-			td.textContent = 0;
+			td.textContent = content;
 			td.id = "cell-" + (i * numColumns + j);
 			td.classList.add("ram-cell");
 			tr.appendChild(td);
