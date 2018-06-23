@@ -60,6 +60,26 @@ function checkForProgramEnd() {
 	return false;
 }
 
+function wrap_uint8(value: number): number {
+	if (value > 255) {
+		value = 0;
+	} else if (value < 0) {
+		value = 255;
+	}
+
+	return value;
+}
+
+function clamp_uint8(value: number): number {
+	if (value > 255) {
+		value = 255;
+	} else if (value < 0) {
+		value = 0;
+	}
+
+	return value;
+}
+
 function runProgram() {
 	window.clearTimeout(timeOutValue);
 	if (checkForProgramEnd()) {
@@ -71,17 +91,9 @@ function runProgram() {
 	var value = getRam();
 
 	if (cmd == "+") {
-		value++;
-		if (value > 255) {
-			value = 0;
-		}
-		setRam(value);
+		setRam(wrap_uint8(value + 1));
 	} else if (cmd == "-") {
-		value--;
-		if (value < 0) {
-			value = 255;
-		}
-		setRam(value);
+		setRam(wrap_uint8(value - 1));
 	} else if (cmd == "<") {
 		decrementPointer();
 	} else if (cmd == ">") {
@@ -91,12 +103,7 @@ function runProgram() {
 		if ("" !== input) {
 			value = input.charCodeAt(0);
 			// Sorry Unicode!
-			if (value > 255) {
-				value = 255;
-			}
-			if (value < 0) {
-				value = 0;
-			}
+			value = clamp_uint8(value);
 			setRam(value);
 		} else {
 			// UH-OH, the user hasn't entered anything into stdin.
