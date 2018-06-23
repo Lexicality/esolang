@@ -15,8 +15,7 @@ export class RAMStack {
 		this.stack = new HighlightStack($$(".ram-cell"));
 		this.size = size;
 		this.data = new Array(this.size);
-		// Use the reset function to clean up the display
-		this.reset();
+		this.updateDisplay();
 	}
 
 	private getCurrentCell(): RAMElement | null {
