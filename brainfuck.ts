@@ -1,17 +1,10 @@
 import { $, $$, stdout, stdin } from "./utils.js";
 
-import { initRam } from "./rams.js";
+import { RAMStack } from "./rams.js";
 
 import { HighlightStack } from "./highlighter.js";
 
-const {
-	resetRam,
-	getRam,
-	setRam,
-	decayRam,
-	incrementPointer,
-	decrementPointer,
-} = initRam(30000);
+let ram = new RAMStack();
 
 var timeOutNum = 1000,
 	timeOutValue = 0,
@@ -37,7 +30,7 @@ function resetProgram() {
 	pc = 0;
 	$("#pc").textContent = pc.toFixed(0);
 	programStack.clear();
-	resetRam();
+	ram.reset();
 }
 
 function haltProgram() {
@@ -88,23 +81,21 @@ function runProgram() {
 	let [cmd, param, el] = program[pc];
 	programStack.promote(el);
 	var didMemOperation = !(cmd == "[" || cmd == "]");
-	var value = getRam();
+	var value = ram.value;
 
 	if (cmd == "+") {
-		setRam(wrap_uint8(value + 1));
+		ram.value = wrap_uint8(value + 1);
 	} else if (cmd == "-") {
-		setRam(wrap_uint8(value - 1));
+		ram.value = wrap_uint8(value - 1);
 	} else if (cmd == "<") {
-		decrementPointer();
+		ram.decrementPointer();
 	} else if (cmd == ">") {
-		incrementPointer();
+		ram.incrementPointer();
 	} else if (cmd == ",") {
 		let input = stdin();
 		if ("" !== input) {
-			value = input.charCodeAt(0);
 			// Sorry Unicode!
-			value = clamp_uint8(value);
-			setRam(value);
+			ram.value = clamp_uint8(input.charCodeAt(0));
 		} else {
 			// UH-OH, the user hasn't entered anything into stdin.
 			// Wait until they do.
@@ -132,7 +123,7 @@ function runProgram() {
 		return;
 	}
 	if (!didMemOperation) {
-		decayRam();
+		ram.tick();
 	}
 	if (running) {
 		timeOutValue = window.setTimeout(runProgram, timeOutNum);
