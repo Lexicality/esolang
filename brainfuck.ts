@@ -134,7 +134,7 @@ function tokenizeProgram(text: string): ParserOutput[] {
 		loopStack: [number, number][] = [],
 		currentComment = "",
 		counter = 0;
-	var tokens = text.split("").forEach(function(token) {
+	var tokens = text.split("").forEach(function (token) {
 		if (isComment.test(token)) {
 			currentComment += token;
 			return;
@@ -189,7 +189,7 @@ function is_opcode(output: ParserOutput): output is ParsedOpcode {
 	return output[0] == "opcode";
 }
 
-$("#program-compile").addEventListener("click", function() {
+$("#program-compile").addEventListener("click", function () {
 	let tarea: HTMLTextAreaElement = $("#program-input");
 	let srccode = tarea.value.trim();
 	tarea.value = "";
@@ -197,43 +197,41 @@ $("#program-compile").addEventListener("click", function() {
 	emptyElement(progEl);
 	let tokens = tokenizeProgram(srccode);
 	program = tokens
-		.map(
-			(token: ParserOutput, i: number): ProgramStep | undefined => {
-				let span = document.createElement("span");
-				span.id = `program-${i}`;
-				span.classList.add(token[0]);
-				span.textContent = token[1];
-				progEl.appendChild(span);
-				if (is_opcode(token)) {
-					var tokenClass = classes[token[1]];
-					if (tokenClass) {
-						span.classList.add(token[0] + "-" + tokenClass);
-					}
-
-					return [token[1], token[2], span];
+		.map((token: ParserOutput, i: number): ProgramStep | undefined => {
+			let span = document.createElement("span");
+			span.id = `program-${i}`;
+			span.classList.add(token[0]);
+			span.textContent = token[1];
+			progEl.appendChild(span);
+			if (is_opcode(token)) {
+				var tokenClass = classes[token[1]];
+				if (tokenClass) {
+					span.classList.add(token[0] + "-" + tokenClass);
 				}
-				return undefined;
-			},
-		)
+
+				return [token[1], token[2], span];
+			}
+			return undefined;
+		})
 		.filter((token): token is ProgramStep => !!token);
 
 	programStack = new HighlightStack($$("#program > .opcode"));
 	resetProgram();
 });
 
-$("#exec-speed").addEventListener("change", function() {
+$("#exec-speed").addEventListener("change", function () {
 	timeOutNum = parseInt((this as HTMLInputElement).value);
 });
-$("#program-step").addEventListener("click", function() {
+$("#program-step").addEventListener("click", function () {
 	runProgram();
 });
-$("#program-pause").addEventListener("click", function() {
+$("#program-pause").addEventListener("click", function () {
 	if (running) {
 		haltProgram();
 	} else {
 		resumeProgram();
 	}
 });
-$("#program-restart").addEventListener("click", function() {
+$("#program-restart").addEventListener("click", function () {
 	resetProgram();
 });
