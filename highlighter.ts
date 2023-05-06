@@ -47,10 +47,7 @@ export class HighlightStack<E extends HTMLElement = HTMLElement> {
 	private lookup: { [id: string]: StackItem<E> };
 
 	constructor(nodes: NodeListOf<E>) {
-		this.items = Array.prototype.map.call(
-			nodes,
-			(node: E) => new StackItem(node),
-		);
+		this.items = Array.from(nodes).map((node: E) => new StackItem(node));
 		this.lookup = {};
 		for (let item of this.items) {
 			this.lookup[item.id] = item;
