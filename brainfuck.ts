@@ -189,7 +189,7 @@ function is_opcode(output: ParserOutput): output is ParsedOpcode {
 	return output[0] == "opcode";
 }
 
-$("#program-compile").addEventListener("click", function () {
+$("#program-compile").addEventListener("click", () => {
 	let tarea: HTMLTextAreaElement = $("#program-input");
 	let srccode = tarea.value.trim();
 	tarea.value = "";
@@ -219,19 +219,15 @@ $("#program-compile").addEventListener("click", function () {
 	resetProgram();
 });
 
-$("#exec-speed").addEventListener("change", function () {
-	timeOutNum = parseInt((this as HTMLInputElement).value);
+$("#exec-speed").addEventListener("change", (event) => {
+	timeOutNum = parseInt((event.currentTarget! as HTMLInputElement).value);
 });
-$("#program-step").addEventListener("click", function () {
-	runProgram();
-});
-$("#program-pause").addEventListener("click", function () {
+$("#program-step").addEventListener("click", runProgram);
+$("#program-pause").addEventListener("click", () => {
 	if (running) {
 		haltProgram();
 	} else {
 		resumeProgram();
 	}
 });
-$("#program-restart").addEventListener("click", function () {
-	resetProgram();
-});
+$("#program-restart").addEventListener("click", resetProgram);
