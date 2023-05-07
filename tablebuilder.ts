@@ -10,18 +10,17 @@ export function constructTable(
 	content: string = "0",
 	type: string = "ram",
 ) {
-	var createElement, i, j, table, tbody, tr, td;
-	createElement = document.createElement.bind(document);
-	table = document.getElementById(id);
+	let createElement = document.createElement.bind(document);
+	let table = document.getElementById(id);
 	if (!table) {
 		throw new Error(`Invalid selector #${id}!`);
 	}
-	tbody = table.querySelector("tbody");
-	for (i = 0; i < numRows; i++) {
-		tr = createElement("tr");
+	let tbody = table.querySelector("tbody");
+	for (let i = 0; i < numRows; i++) {
+		let tr = createElement("tr");
 		tr.id = `${type}-row-${i}`;
-		for (j = 0; j < numColumns; j++) {
-			td = createElement("td");
+		for (let j = 0; j < numColumns; j++) {
+			let td = createElement("td");
 			td.textContent = content;
 			td.id = `${type}-cell-${i * numColumns + j}`;
 			td.classList.add(`${type}-cell`);

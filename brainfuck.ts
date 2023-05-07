@@ -6,7 +6,7 @@ import { HighlightStack } from "./highlighter.js";
 
 let ram = new RAMStack();
 
-var timeOutNum = 1000,
+let timeOutNum = 1000,
 	timeOutValue = 0,
 	running = false;
 
@@ -80,7 +80,7 @@ function runProgram() {
 	}
 	let [cmd, param, el] = program[pc];
 	programStack.promote(el);
-	var value = ram.value;
+	let value = ram.value;
 
 	if (cmd == "+") {
 		ram.value = wrap_uint8(value + 1);
@@ -127,15 +127,15 @@ function runProgram() {
 		timeOutValue = window.setTimeout(runProgram, timeOutNum);
 	}
 }
-var isComment = /[^<>+\-[\].,]/;
+const COMMENT_RE = /[^<>+\-[\].,]/;
 
 function tokenizeProgram(text: string): ParserOutput[] {
-	var prog: ParserOutput[] = [],
+	let prog: ParserOutput[] = [],
 		loopStack: [number, number][] = [],
 		currentComment = "",
 		counter = 0;
-	var tokens = text.split("").forEach(function (token) {
-		if (isComment.test(token)) {
+	let tokens = text.split("").forEach(function (token) {
+		if (COMMENT_RE.test(token)) {
 			currentComment += token;
 			return;
 		}
@@ -147,7 +147,7 @@ function tokenizeProgram(text: string): ParserOutput[] {
 			loopStack.push([prog.length, counter]);
 			prog.push(["opcode", token, -1]);
 		} else if (token == "]") {
-			var match = loopStack.pop();
+			let match = loopStack.pop();
 			if (!match) {
 				throw new Error("Unbalanced []s!");
 			}
@@ -174,7 +174,7 @@ function emptyElement(el: HTMLElement): void {
 	}
 }
 
-var classes: { [key: string]: string } = {
+const SYMBOL_HTTP_CLASSES: { [key: string]: string } = {
 	"<": "lt",
 	">": "gt",
 	"+": "plus",
@@ -204,7 +204,7 @@ $("#program-compile").addEventListener("click", function () {
 			span.textContent = token[1];
 			progEl.appendChild(span);
 			if (is_opcode(token)) {
-				var tokenClass = classes[token[1]];
+				let tokenClass = SYMBOL_HTTP_CLASSES[token[1]];
 				if (tokenClass) {
 					span.classList.add(token[0] + "-" + tokenClass);
 				}
