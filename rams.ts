@@ -19,7 +19,7 @@ export class RAMStack {
 	}
 
 	private getCurrentCell(): RAMElement | null {
-		return $<RAMElement>(`#cell-${this._pointer}`, true);
+		return $<RAMElement>(`#ram-cell-${this._pointer}`, true);
 	}
 
 	private updateDisplay() {
