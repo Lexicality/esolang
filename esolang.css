@@ -1,8 +1,15 @@
 @import "stack.css";
 
+* {
+	box-sizing: border-box;
+}
+
 body {
 	width: 1008px;
 	margin: 8px auto;
+	font-family: "Berkeley Mono", "Courier New", Courier, monospace;
+	font-variant-ligatures: none; /* unfortunately the ligatures don't behave nicely here */
+	background-color: #f2efdf;
 }
 
 body,
@@ -19,22 +26,11 @@ body,
 	flex: 4;
 }
 
-h2,
-p {
-	margin: 0;
-	padding: 0;
-}
-
-h1,
-h2,
-h3,
-h4,
-h4 {
-	font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
-}
-
 textarea {
 	resize: none;
+	font-family: inherit;
+	font-variant: inherit;
+	font-size: smaller;
 }
 
 textarea,
@@ -51,47 +47,45 @@ button {
 
 .srccode {
 	white-space: pre-wrap;
-	width: 100%;
 	height: 200px;
 	overflow: auto;
-	background: rgb(230, 230, 230);
-	font-family: "Courier New", Courier, "Lucida Sans Typewriter",
-		"Lucida Typewriter", monospace;
+	background: #fffbef;
+	color: #5c6a72;
+	padding: 0.5em;
 }
+
 .comment {
-	color: rgb(100, 100, 100);
+	color: #939f91;
 	font-style: italic;
 }
 #registers td {
 	text-align: center;
 }
 
-/*
 .opcode-lt {
-	color: ;
+	color: #35a77c;
 }
 .opcode-gt {
-	color: ;
+	color: #35a77c;
 }
 .opcode-plus {
-	color: ;
+	color: #f57d26;
 }
 .opcode-dash {
-	color: ;
+	color: #f57d26;
 }
 .opcode-lbrk {
-	color: ;
+	color: #f85552;
 }
 .opcode-rbrk {
-	color: ;
+	color: #f85552;
 }
 .opcode-dot {
-	color: ;
+	color: #8da101;
 }
 .opcode-coma {
-	color: ;
+	color: #8da101;
 }
-*/
 
 #exec-speed-container {
 	display: flex;
