@@ -43,25 +43,28 @@
 				</form>
 			</section>
 		</header>
-		<section id="actual-program">
+		<section id="program-wrapper">
 			<h2>Program</h2>
 			<p id="program" class="srccode"></p>
-			<h2>STDOut</h2>
+		</section>
+		<section id="stdout-wrapper">
+			<h2>Output</h2>
 			<p id="stdout" class="srccode"></p>
 		</section>
-		<section id="compiler-modal" class="modal -active">
-			<section class="modal-content">
-				<h2>Program Input</h2>
-				<div id="compiler-errors"></div>
-				<form id="compiler-form" action="#">
-					<textarea id="program-input" required></textarea>
-					<button type="submit" id="program-compile">Compile</button>
-				</form>
-				<button type="button" class="modal-close">cancel</button>
-			</section>
+	</main>
+	<section id="compiler-modal" class="modal -active">
+		<section class="modal-content">
+			<h2>Program Input</h2>
+			<div id="compiler-errors"></div>
+			<form id="compiler-form" action="#">
+				<textarea id="program-input" required></textarea>
+				<button type="submit" id="program-compile">Compile</button>
+			</form>
+			<button type="button" class="modal-close">cancel</button>
 		</section>
+	</section>
 
-		<script type="module" src="./build/brainfuck.js"></script>
+	<script type="module" src="./build/brainfuck.js"></script>
 </body>
 
 </html>

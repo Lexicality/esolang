@@ -4,12 +4,23 @@
 	box-sizing: border-box;
 }
 
-body {
-	width: 1008px;
-	margin: 8px auto;
+body,
+html {
+	height: 100%;
+	margin: 0;
+	padding: 0;
 	font-family: "Berkeley Mono", "Courier New", Courier, monospace;
 	font-variant-ligatures: none; /* unfortunately the ligatures don't behave nicely here */
 	background-color: #f2efdf;
+}
+
+#main {
+	width: 1008px;
+	margin: 0 auto;
+	padding: 0.5em 0;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
 }
 
 textarea {
@@ -98,7 +109,7 @@ textarea {
 
 .srccode {
 	white-space: pre-wrap;
-	height: 200px;
+	min-height: 5em;
 	overflow: auto;
 	background: #fffbef;
 	color: #5c6a72;
@@ -157,6 +168,10 @@ textarea {
 	background-color: #bdc3af;
 }
 
+#main > * {
+	flex: 0 0 auto;
+}
+
 #header {
 	display: flex;
 }
@@ -204,4 +219,15 @@ textarea {
 }
 #program-controls > *:first-child {
 	margin-left: 0;
+}
+
+#program-wrapper {
+	flex: 1 1 auto;
+	display: flex;
+	flex-direction: column;
+}
+
+#program {
+	flex: 1 1 0;
+	margin: 0;
 }
