@@ -2,32 +2,72 @@ import { $, $$ } from "./utils.js";
 import { HighlightStack } from "./highlighter.js";
 
 const MAX_RAM = 30000;
+const INITIAL_DISPLAY = 5;
+const DEFAULT_TEXT_VALUE = `0x00 '${String.fromCodePoint(0)}'`;
 
-type RAMElement = HTMLTableCellElement;
+function hexify(num: number): string {
+	if (num <= 0x0f) {
+		return "0" + num.toString(16);
+	}
+	return num.toString(16);
+}
 
 export class RAMStack {
-	private stack: HighlightStack;
 	private size: number;
 	private _pointer: number = 0;
 	private data: number[];
+	private lastCreatedCell = -1;
 
 	constructor(size = MAX_RAM) {
-		this.stack = new HighlightStack($$(".ram-cell"));
 		this.size = size;
 		this.data = new Array(this.size);
-		this.updateDisplay();
+		$("#ram-headers").innerText = "";
+		$("#ram-values").innerText = "";
+		for (let i = 0; i < INITIAL_DISPLAY; i++) {
+			this.createCell();
+		}
+		this.updateActive();
 	}
 
-	private getCurrentCell(): RAMElement | null {
-		return $<RAMElement>(`#ram-cell-${this._pointer}`, true);
+	private createCell(): void {
+		let cellNumber = this.lastCreatedCell + 1;
+		this.lastCreatedCell += 1;
+
+		let th = document.createElement("th", {});
+		th.id = `ram-header-${cellNumber}`;
+		th.classList.add("active", `ram-item-${cellNumber}`, "ram-header");
+		th.textContent = cellNumber.toLocaleString();
+		$("#ram-headers").appendChild(th);
+
+		let td = document.createElement("td");
+		td.id = `ram-cell-${cellNumber}`;
+		td.classList.add("active", `ram-item-${cellNumber}`, "ram-cell");
+		td.textContent = DEFAULT_TEXT_VALUE;
+		$("#ram-values").appendChild(td);
+
+		th.scrollIntoView({
+			behavior: "smooth",
+			inline: "nearest",
+		});
 	}
 
-	private updateDisplay() {
-		let data = this.value;
-		let dataDisplay = String.fromCharCode(data);
-		let dataHex = data.toString(16);
-		$("#memValue").textContent = `'${dataDisplay}' (0x${dataHex})`;
-		$("#ramPointer").textContent = this.pointer.toFixed(0);
+	private updateActive() {
+		// We can work on the basis that we never move more than 1 ram item at a time here
+		for (let el of $$("#rams .active")) {
+			el.classList.remove("active");
+		}
+		let newActive = $$(`#rams .ram-item-${this.pointer}`);
+		if (newActive.length == 0) {
+			this.createCell();
+			return;
+		}
+		for (let el of newActive) {
+			el.classList.add("active");
+			el.scrollIntoView({
+				behavior: "smooth",
+				inline: "nearest",
+			});
+		}
 	}
 
 	private get pointer() {
@@ -35,24 +75,13 @@ export class RAMStack {
 	}
 
 	private set pointer(num: number) {
-		// Hopefully this will do the general trick
-		if (num >= this.size) {
-			num -= this.size;
-		} else if (num < 0) {
-			num += this.size;
+		// Don't allow wrapping (for my own sanity)
+		if (num < 0 || num >= this.size) {
+			throw new Error("Attempt to set memory pointer out of bounds!");
 		}
 
-		let cell = this.getCurrentCell();
-		if (cell) {
-			cell.classList.remove("active-cell");
-		}
 		this._pointer = num;
-		cell = this.getCurrentCell();
-		if (cell) {
-			cell.classList.add("active-cell");
-			this.stack.promote(cell);
-		}
-		this.updateDisplay();
+		this.updateActive();
 	}
 
 	public incrementPointer(): void {
@@ -69,32 +98,16 @@ export class RAMStack {
 
 	public set value(value: number) {
 		this.data[this.pointer] = value;
-		this.updateDisplay();
-		let cell = this.getCurrentCell();
-		if (cell) {
-			this.stack.promote(cell);
-			cell.textContent = value.toFixed(0);
-		}
-	}
-
-	public readValue(): void {
-		let cell = this.getCurrentCell();
-		if (cell) {
-			this.stack.promote(cell);
-		}
-	}
-
-	public tick(): void {
-		this.stack.tick();
+		let hex = hexify(value);
+		let str = String.fromCodePoint(value);
+		$(`#ram-cell-${this.pointer}`).textContent = `0x${hex} '${str}'`;
 	}
 
 	public reset(): void {
 		this.data = new Array(this.size);
-		this._pointer = 0;
-		this.stack.reset();
-		$$<RAMElement>(".ram-cell").forEach((node) => {
-			node.textContent = "0";
-			node.classList.remove("active-cell");
-		});
+		for (let el of $$("#rams .ram-cell")) {
+			el.textContent = DEFAULT_TEXT_VALUE;
+		}
+		this.pointer = 0;
 	}
 }

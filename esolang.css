@@ -12,37 +12,11 @@ body {
 	background-color: #f2efdf;
 }
 
-body,
-#program-controls {
-	display: flex;
-}
-#content,
-#controls {
-	/*padding: 5px;*/
-	flex: 1;
-}
-#content {
-	margin-right: 10px;
-	flex: 4;
-}
-
 textarea {
 	resize: none;
 	font-family: inherit;
 	font-variant: inherit;
 	font-size: smaller;
-}
-
-textarea,
-table,
-button {
-	width: 100%;
-	box-sizing: border-box;
-}
-
-.active-cell {
-	/*text-decoration: underline;*/
-	border: 1px dashed red;
 }
 
 .srccode {
@@ -89,11 +63,68 @@ button {
 
 #exec-speed-container {
 	display: flex;
+	font-size: 0.9rem;
+	line-height: 1.5em;
+	margin-top: 0.5rem;
 }
 #exec-speed-container > span {
-	flex: 0;
-	margin-left: 2px;
+	flex: 0 0 auto;
+	margin-right: 0.5em;
 }
 #exec-speed {
-	flex: 1;
+	flex: 1 1 auto;
+	font-family: inherit;
+}
+
+#rams .active {
+	background-color: #bdc3af;
+}
+
+#header {
+	display: flex;
+}
+
+#header h2 {
+	margin: 0 0 0.2em;
+}
+
+#header-ram {
+	flex: 1 1 auto;
+	overflow: hidden;
+}
+
+#rambox {
+	overflow: auto;
+}
+
+#rams {
+	table-layout: fixed;
+	white-space: nowrap;
+}
+
+.ram-cell {
+	padding: 0.1em 0.3em;
+}
+
+#header-controls {
+	flex: 0 0 250px;
+	margin-left: 0.5em;
+}
+
+#program-controls {
+	display: flex;
+	padding: 0;
+	margin: 0;
+	border: 0;
+}
+
+#program-controls > * {
+	margin: 0 0.2em;
+	flex: 1 1 auto;
+}
+#program-controls > *:last-child {
+	margin-right: 0;
+}
+#program-controls > *:first-child {
+	margin-left: 0;
 }

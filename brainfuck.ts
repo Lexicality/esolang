@@ -28,7 +28,7 @@ let pc = 0;
 
 function resetProgram() {
 	pc = 0;
-	$("#pc").textContent = "0";
+	// $("#pc").textContent = "0";
 	resetStdin();
 	resetStdout();
 	programStack.reset();
@@ -94,9 +94,23 @@ function runProgram() {
 	} else if (cmd == "-") {
 		ram.value = wrap_uint8(value - 1);
 	} else if (cmd == "<") {
-		ram.decrementPointer();
+		try {
+			ram.decrementPointer();
+		} catch (e) {
+			console.error(e);
+			alert("Attempted memory pointer underflow");
+			haltProgram();
+			return;
+		}
 	} else if (cmd == ">") {
-		ram.incrementPointer();
+		try {
+			ram.incrementPointer();
+		} catch (e) {
+			console.error(e);
+			alert("Attempted memory pointer overflow");
+			haltProgram();
+			return;
+		}
 	} else if (cmd == ",") {
 		try {
 			ram.value = clamp_uint8(stdin().charCodeAt(0));
@@ -106,14 +120,11 @@ function runProgram() {
 		}
 	} else if (cmd == ".") {
 		stdout(String.fromCharCode(value));
-		ram.readValue();
 	} else if (cmd == "[") {
-		ram.readValue();
 		if (!value) {
 			pc = param!;
 		}
 	} else if (cmd == "]") {
-		ram.readValue();
 		if (value) {
 			pc = param!;
 		}
@@ -122,7 +133,6 @@ function runProgram() {
 	}
 
 	pc++;
-	$("#pc").textContent = pc.toFixed(0);
 	if (checkForProgramEnd()) {
 		return;
 	}

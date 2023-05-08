@@ -1,57 +1,58 @@
 <!DOCTYPE html>
 <html lang="en-gb">
+
 <head>
 	<meta charset="utf-8">
 	<title>Brainfuck</title>
 	<link rel="stylesheet" type="text/css" href="esolang.css">
-	<style type="text/css">
-	#rams {
-		text-align: center;
-	}
-	</style>
 	<link rel="modulepreload" href="./build/tablebuilder.js" />
 	<link rel="modulepreload" href="./build/utils.js" />
 	<link rel="modulepreload" href="./build/highlighter.js" />
 	<link rel="modulepreload" href="./build/rams.js" />
 	<link rel="modulepreload" href="./build/brainfuck.js" />
-<body>
-	<div id="content">
-		<h2>Program</h2>
-		<p id="program" class="srccode"></p>
-		<h2>STDOut</h2>
-		<p id="stdout" class="srccode"></p>
-		<h2>RAM</h2>
-		<table id="rams" border="1">
-			<thead></thead>
-			<tbody></tbody>
-		</table>
-	</div>
-	<div id="controls">
-		<h2>Registers</h2>
-		<table border="1" id="registers">
-			<thead><tr><th width="25%">PC</th><th width="25%">MP</th><th>Alpha</th></tr></thead>
-			<tbody><tr><td id="pc">0</td><td id="ramPointer">0</td><td id="memValue">''</td></tr></tbody>
-		</table>
-		<h2>Controls</h2>
-		<div id="program-controls">
-			<button id="program-pause" disabled>Start</button>
-			<button id="program-step" disabled>Step</button>
-			<button id="program-restart" disabled>Restart</button>
-		</div>
-		<h2>Execution Speed</h2>
-		<div id="exec-speed-container">
-			<input id="exec-speed" type="number" value="1000" min="0">
-			<span>ms</span>
-		</div>
-		<h2>Program Input</h2>
-		<textarea id="program-input" rows="5"></textarea>
-		<button id="program-compile">Compile</button>
 
-	</div>
-	<script type="module">
-		import { constructTable } from "./build/tablebuilder.js";
-		constructTable('rams', 3, 30);
-	</script>
-	<script type="module" src="./build/brainfuck.js"></script>
+<body>
+	<main id="main">
+		<header id="header">
+			<section id="header-ram">
+				<h2>RAM</h2>
+				<div id="rambox">
+					<table id="rams" border="1">
+						<thead>
+							<tr id="ram-headers"></tr>
+						</thead>
+						<tbody>
+							<tr id="ram-values"></tr>
+						</tbody>
+					</table>
+				</div>
+			</section>
+			<section id="header-controls">
+				<h2>Controls</h2>
+				<form onsubmit="javascript:return false">
+					<fieldset id="program-controls">
+						<button type="button" id="program-pause" disabled>Start</button>
+						<button type="button" id="program-step" disabled>Step</button>
+						<button type="button" id="program-restart" disabled>Restart</button>
+					</fieldset>
+					<label id="exec-speed-container">
+						<span>Execution Speed</span>
+						<input id="exec-speed" type="number" value="1000" min="0" size="1">
+					</label>
+				</form>
+			</section>
+		</header>
+		<section id="actual-program">
+			<h2>Program</h2>
+			<p id="program" class="srccode"></p>
+			<h2>STDOut</h2>
+			<p id="stdout" class="srccode"></p>
+			<h2>Program Input</h2>
+			<textarea id="program-input" rows="5"></textarea>
+			<button id="program-compile">Compile</button>
+		</section>
+
+		<script type="module" src="./build/brainfuck.js"></script>
 </body>
+
 </html>
