@@ -222,18 +222,22 @@ function newProgram(srccode: string): void {
 	resetProgram();
 }
 
-$("#program-compile").addEventListener("click", () => {
+$("#compiler-form").addEventListener("submit", (event) => {
+	event.preventDefault();
 	let tarea: HTMLTextAreaElement = $("#program-input");
+	let errors = $("#compiler-errors");
+	errors.innerText = "";
 	try {
 		newProgram(tarea.value.trim());
 	} catch (e) {
 		if (e instanceof Error) {
 			e = e.message;
 		}
-		alert(e + "");
+		errors.innerText = e + "";
 		return;
 	}
 	tarea.value = "";
+	$("#compiler-modal").classList.remove("-active");
 });
 
 $("#exec-speed").addEventListener("change", (event) => {
@@ -248,3 +252,10 @@ $("#program-pause").addEventListener("click", () => {
 	}
 });
 $("#program-restart").addEventListener("click", resetProgram);
+$("#program-new").addEventListener("click", () => {
+	haltProgram();
+	$("#compiler-modal").classList.add("-active");
+});
+$("#compiler-modal .modal-close").addEventListener("click", () => {
+	$("#compiler-modal").classList.remove("-active");
+});
