@@ -52,7 +52,8 @@ button {
 .srccode {
 	white-space: pre-wrap;
 	width: 100%;
-	min-height: 100px;
+	height: 200px;
+	overflow: auto;
 	background: rgb(230, 230, 230);
 	font-family: "Courier New", Courier, "Lucida Sans Typewriter",
 		"Lucida Typewriter", monospace;

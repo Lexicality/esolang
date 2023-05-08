@@ -80,6 +80,10 @@ function runProgram() {
 	}
 	let [cmd, param, el] = program[pc];
 	programStack.promote(el);
+	el.scrollIntoView({
+		behavior: "smooth",
+		block: "nearest",
+	});
 	let value = ram.value;
 
 	if (cmd == "+") {
