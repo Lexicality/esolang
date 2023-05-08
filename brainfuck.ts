@@ -240,9 +240,15 @@ $("#compiler-form").addEventListener("submit", (event) => {
 	$("#compiler-modal").classList.remove("-active");
 });
 
-$("#exec-speed").addEventListener("change", (event) => {
-	timeOutNum = parseInt((event.currentTarget! as HTMLInputElement).value);
-});
+function updateSpeed() {
+	let val = $<HTMLInputElement>("#exec-speed").valueAsNumber;
+	if (!isNaN(val)) {
+		timeOutNum = val;
+	}
+}
+
+$("#exec-speed").addEventListener("change", updateSpeed);
+updateSpeed();
 $("#program-step").addEventListener("click", runProgram);
 $("#program-pause").addEventListener("click", () => {
 	if (running) {
