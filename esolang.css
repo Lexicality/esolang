@@ -116,37 +116,34 @@ textarea {
 	padding: 0.5em;
 }
 
-.comment {
+.token-comment {
 	color: #939f91;
 	font-style: italic;
 }
-#registers td {
-	text-align: center;
-}
-
-.opcode-lt {
-	color: #35a77c;
-}
-.opcode-gt {
-	color: #35a77c;
-}
-.opcode-plus {
-	color: #f57d26;
-}
-.opcode-dash {
-	color: #f57d26;
-}
-.opcode-lbrk {
+.token-conditional,
+.token-loop {
 	color: #f85552;
 }
-.opcode-rbrk {
-	color: #f85552;
+.token-operator {
+	color: #f57d26;
 }
-.opcode-dot {
+.token-special {
+	color: #dfa000;
+}
+.token-func,
+.token-string {
 	color: #8da101;
 }
-.opcode-coma {
-	color: #8da101;
+.token-constant,
+.token-macro {
+	color: #35a77c;
+}
+.token-ident,
+.token-special {
+	color: #3a94c5;
+}
+.token-literal {
+	color: #df69ba;
 }
 
 #exec-speed-container {

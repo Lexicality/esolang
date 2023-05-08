@@ -180,15 +180,25 @@ function tokenizeProgram(text: string): ParserOutput[] {
 	return prog;
 }
 
-const SYMBOL_HTTP_CLASSES: { [key: string]: string } = {
-	"<": "lt",
-	">": "gt",
-	"+": "plus",
-	"-": "dash",
-	"[": "lbrk",
-	"]": "rbrk",
-	".": "dot",
-	",": "coma",
+const SYMBOL_NAMES = {
+	"<": "mp-decr",
+	">": "mp-incr",
+	"+": "value-incr",
+	"-": "value-decr",
+	"[": "loop-start",
+	"]": "loop-end",
+	".": "output",
+	",": "input",
+};
+const SYMBOL_SYNTAX_TYPE = {
+	"<": "special",
+	">": "special",
+	"+": "operator",
+	"-": "operator",
+	"[": "loop",
+	"]": "loop",
+	".": "func",
+	",": "func",
 };
 
 function is_opcode(output: ParserOutput): output is ParsedOpcode {
@@ -201,20 +211,24 @@ function newProgram(srccode: string): void {
 	let tokens = tokenizeProgram(srccode);
 	program = tokens
 		.map((token: ParserOutput, i: number): ProgramStep | undefined => {
+			let [kind, value] = token;
 			let span = document.createElement("span");
-			span.id = `program-${i}`;
-			span.classList.add(token[0]);
-			span.textContent = token[1];
-			progEl.appendChild(span);
-			if (is_opcode(token)) {
-				let tokenClass = SYMBOL_HTTP_CLASSES[token[1]];
-				if (tokenClass) {
-					span.classList.add(token[0] + "-" + tokenClass);
-				}
 
-				return [token[1], token[2], span];
+			span.id = `program-${i}`;
+			span.classList.add(kind);
+			span.textContent = value;
+			progEl.appendChild(span);
+
+			if (!is_opcode(token)) {
+				span.classList.add("token-comment");
+				return undefined;
 			}
-			return undefined;
+			let opcode = token[1];
+			let name = SYMBOL_NAMES[opcode];
+			let syntax = SYMBOL_SYNTAX_TYPE[opcode];
+			span.classList.add(`token-${syntax}`, `opcode-${name}`);
+
+			return [token[1], token[2], span];
 		})
 		.filter((token): token is ProgramStep => !!token);
 
