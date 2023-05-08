@@ -1,4 +1,4 @@
-import { $, $$, stdout, stdin } from "./utils.js";
+import { $, $$, stdout, stdin, resetStdin, resetStdout } from "./utils.js";
 
 import { RAMStack } from "./rams.js";
 
@@ -28,9 +28,16 @@ let pc = 0;
 
 function resetProgram() {
 	pc = 0;
-	$("#pc").textContent = pc.toFixed(0);
+	$("#pc").textContent = "0";
+	resetStdin();
+	resetStdout();
 	programStack.reset();
 	ram.reset();
+	let pause = $<HTMLButtonElement>("#program-pause");
+	pause.innerText = "Start";
+	pause.disabled = false;
+	$<HTMLButtonElement>("#program-step").disabled = false;
+	$<HTMLButtonElement>("#program-restart").disabled = false;
 }
 
 function haltProgram() {
@@ -48,6 +55,8 @@ function resumeProgram() {
 function checkForProgramEnd() {
 	if (!program[pc]) {
 		haltProgram();
+		$<HTMLButtonElement>("#program-pause").disabled = true;
+		$<HTMLButtonElement>("#program-step").disabled = true;
 		return true;
 	}
 	return false;
@@ -64,13 +73,7 @@ function wrap_uint8(value: number): number {
 }
 
 function clamp_uint8(value: number): number {
-	if (value > 255) {
-		value = 255;
-	} else if (value < 0) {
-		value = 0;
-	}
-
-	return value;
+	return Math.max(0, Math.min(255, value));
 }
 
 function runProgram() {
@@ -95,15 +98,11 @@ function runProgram() {
 	} else if (cmd == ">") {
 		ram.incrementPointer();
 	} else if (cmd == ",") {
-		let input = stdin();
-		if ("" !== input) {
-			// Sorry Unicode!
-			ram.value = clamp_uint8(input.charCodeAt(0));
-		} else {
-			// UH-OH, the user hasn't entered anything into stdin.
-			// Wait until they do.
-			// TODO: Maybe some kind of notification?
-			pc--;
+		try {
+			ram.value = clamp_uint8(stdin().charCodeAt(0));
+		} catch (e) {
+			haltProgram();
+			return;
 		}
 	} else if (cmd == ".") {
 		stdout(String.fromCharCode(value));
@@ -171,13 +170,6 @@ function tokenizeProgram(text: string): ParserOutput[] {
 	return prog;
 }
 
-function emptyElement(el: HTMLElement): void {
-	while (el.firstChild) {
-		// FIXME: Does el .remove() on the child? We don't want orphan nodes
-		el.removeChild(el.firstChild);
-	}
-}
-
 const SYMBOL_HTTP_CLASSES: { [key: string]: string } = {
 	"<": "lt",
 	">": "gt",
@@ -193,12 +185,9 @@ function is_opcode(output: ParserOutput): output is ParsedOpcode {
 	return output[0] == "opcode";
 }
 
-$("#program-compile").addEventListener("click", () => {
-	let tarea: HTMLTextAreaElement = $("#program-input");
-	let srccode = tarea.value.trim();
-	tarea.value = "";
+function newProgram(srccode: string): void {
 	let progEl = $("#program");
-	emptyElement(progEl);
+	progEl.textContent = "";
 	let tokens = tokenizeProgram(srccode);
 	program = tokens
 		.map((token: ParserOutput, i: number): ProgramStep | undefined => {
@@ -221,6 +210,20 @@ $("#program-compile").addEventListener("click", () => {
 
 	programStack = new HighlightStack($$("#program > .opcode"));
 	resetProgram();
+}
+
+$("#program-compile").addEventListener("click", () => {
+	let tarea: HTMLTextAreaElement = $("#program-input");
+	try {
+		newProgram(tarea.value.trim());
+	} catch (e) {
+		if (e instanceof Error) {
+			e = e.message;
+		}
+		alert(e + "");
+		return;
+	}
+	tarea.value = "";
 });
 
 $("#exec-speed").addEventListener("change", (event) => {

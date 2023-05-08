@@ -22,9 +22,24 @@ export function stdout(msg: string): void {
 	$("#stdout").textContent += msg;
 }
 
+let stdinBuffer = "";
 export function stdin(): string {
-	let el: HTMLTextAreaElement = $("#stdin");
-	let value = el.value[0] || "";
-	el.value = el.value.slice(1);
+	while (!stdinBuffer) {
+		let res = prompt("Please enter text for stdin");
+		if (res === null) {
+			throw new Error("no stdin");
+		}
+		stdinBuffer = res;
+	}
+	let value = stdinBuffer[0];
+	stdinBuffer = stdinBuffer.slice(1);
 	return value;
+}
+
+export function resetStdout(): void {
+	$("#stdout").textContent = "";
+}
+
+export function resetStdin(): void {
+	stdinBuffer = "";
 }
