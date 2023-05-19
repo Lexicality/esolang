@@ -12,7 +12,7 @@ function hexify(num: number): string {
 	return num.toString(16);
 }
 
-export class RAMStack {
+export class BFRam {
 	private size: number;
 	private _pointer: number = 0;
 	private data: number[];

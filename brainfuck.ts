@@ -1,10 +1,10 @@
 import { $, $$, stdout, stdin, resetStdin, resetStdout } from "./utils.js";
 
-import { RAMStack } from "./rams.js";
+import { BFRam } from "./rams.js";
 
 import { HighlightStack } from "./highlighter.js";
 
-let ram = new RAMStack();
+let ram = new BFRam();
 
 let timeOutNum = 1000,
 	timeOutValue = 0,
