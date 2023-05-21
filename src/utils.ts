@@ -36,6 +36,19 @@ export function stdin(): string {
 	return value;
 }
 
+export function requestNumber(): number {
+	while (true) {
+		let res = prompt("Please enter a number");
+		if (res === null) {
+			throw new Error("no numbers");
+		}
+		let number = parseInt(res, 10);
+		if (!isNaN(number)) {
+			return number;
+		}
+	}
+}
+
 export function resetStdout(): void {
 	$("#stdout").textContent = "";
 }

@@ -111,3 +111,78 @@ export class BFRam {
 		this.pointer = 0;
 	}
 }
+
+export class StackRam {
+	private stack: number[] = [];
+
+	constructor() {
+		this.reset();
+	}
+
+	private deactivate() {
+		for (let el of $$("#rams .active")) {
+			el.classList.remove("active");
+		}
+	}
+	private activate(id: number) {
+		this.deactivate();
+		let cell = $(`#ram-cell-${id}`, true);
+		if (!cell) {
+			return;
+		}
+		cell.classList.add("active");
+		cell.scrollIntoView({
+			behavior: "smooth",
+			inline: "nearest",
+		});
+	}
+
+	private createCell(id: number, value: number): void {
+		let td = document.createElement("td");
+		td.id = `ram-cell-${id}`;
+		td.classList.add("ram-item", `ram-item-${id}`, "ram-cell");
+		let hex = hexify(value);
+		try {
+			let str = String.fromCodePoint(value);
+			td.textContent = `0x${hex} '${str}'`;
+		} catch (e) {
+			td.textContent = `0x${hex} '�'`;
+		}
+		$("#ram-values").appendChild(td);
+		this.activate(id);
+	}
+
+	public push(value: number): void {
+		if (isNaN(value)) {
+			throw new Error("Can't push NaN!");
+		}
+		let id = this.stack.length;
+		this.stack.push(value);
+		this.createCell(id, value);
+	}
+
+	public pop(): number {
+		if (this.stack.length == 0) {
+			return 0;
+		}
+		let value = this.stack.pop()!;
+		let id = this.stack.length;
+		$(`#ram-cell-${id}`).remove();
+		this.activate(id - 1);
+		return value;
+	}
+
+	public duplicate(): void {
+		if (this.stack.length == 0) {
+			return this.push(0);
+		}
+		let value = this.stack[this.stack.length - 1];
+		this.push(value);
+	}
+
+	public reset(): void {
+		$("#ram-values").innerText = "";
+		this.stack = [];
+		this.createCell(-1, 0);
+	}
+}
