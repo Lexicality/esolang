@@ -1,8 +1,7 @@
-import { $, $$, stdout, stdin, resetStdin, resetStdout } from "./utils.js";
-
-import { BFRam } from "./rams.js";
-
 import { HighlightStack } from "./highlighter.js";
+import { closeModal, openModal } from "./modal.js";
+import { BFRam } from "./rams.js";
+import { $, $$, resetStdin, resetStdout, stdin, stdout } from "./utils.js";
 
 let ram = new BFRam();
 
@@ -251,7 +250,7 @@ $("#compiler-form").addEventListener("submit", (event) => {
 		return;
 	}
 	tarea.value = "";
-	$("#compiler-modal").classList.remove("-active");
+	closeModal($("#compiler-modal"));
 });
 
 function updateSpeed() {
@@ -274,8 +273,7 @@ $("#program-pause").addEventListener("click", () => {
 $("#program-restart").addEventListener("click", resetProgram);
 $("#program-new").addEventListener("click", () => {
 	haltProgram();
-	$("#compiler-modal").classList.add("-active");
+	openModal($("#compiler-modal"));
 });
-$("#compiler-modal .modal-close").addEventListener("click", () => {
-	$("#compiler-modal").classList.remove("-active");
-});
+
+openModal($("#compiler-modal"));

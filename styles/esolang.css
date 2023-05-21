@@ -1,4 +1,5 @@
 @import "stack.css";
+@import "modal.css";
 
 * {
 	box-sizing: border-box;
@@ -28,51 +29,6 @@ textarea {
 	font-family: inherit;
 	font-variant: inherit;
 	font-size: smaller;
-}
-
-.modal {
-	display: none;
-}
-
-.modal.-active {
-	display: block;
-	position: fixed;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	background: rgba(0, 0, 0, 0.5);
-}
-
-.modal > .modal-content {
-	display: block;
-	margin: 10vh auto;
-	background-color: #f2efdf;
-	/* height: 80vh; */
-	width: 50vw;
-	min-width: 300px;
-	padding: 2em;
-	position: relative;
-}
-
-.modal-content > h2:first-of-type {
-	margin-top: 0;
-}
-
-.modal-content > .modal-close {
-	position: absolute;
-	top: 0;
-	right: 0;
-	border: none;
-	background: none;
-	text-decoration: underline;
-	padding: 1em;
-	cursor: pointer;
-	font-family: inherit;
-}
-
-.modal-content > .modal-close:hover {
-	background-color: #bdc3af;
 }
 
 #program-input {
