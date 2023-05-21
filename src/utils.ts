@@ -19,7 +19,12 @@ export function $<E extends Element = HTMLElement>(
 export const $$ = document.querySelectorAll.bind(document);
 
 export function stdout(msg: string): void {
-	$("#stdout").textContent += msg;
+	let stdout = $<HTMLParagraphElement>("#stdout");
+	stdout.textContent += msg;
+	let wrapper = stdout.parentElement!;
+	wrapper.scroll({
+		top: wrapper.scrollHeight,
+	});
 }
 
 let stdinBuffer = "";

@@ -175,7 +175,7 @@ textarea {
 }
 
 #program-wrapper {
-	flex: 1 1 auto;
+	flex: 1 0 auto;
 	display: flex;
 	flex-direction: column;
 }
@@ -183,4 +183,9 @@ textarea {
 #program {
 	flex: 1 1 0;
 	margin: 0;
+}
+
+#stdout-wrapper {
+	overflow: auto;
+	max-height: 30vh;
 }
